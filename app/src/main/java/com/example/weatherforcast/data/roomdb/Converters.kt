@@ -25,10 +25,10 @@ class Converters {
 
     @TypeConverter
     fun jsonToAlertList(value: String?): List<Alerts> {
-        if(value.isNullOrEmpty())
-            return Gson().fromJson(value, Array<Alerts>::class.java).toList()
-        else
+        if(value==null)
             return emptyList()
+        else
+            return Gson().fromJson(value, Array<Alerts>::class.java).toList()
 
     }
 }

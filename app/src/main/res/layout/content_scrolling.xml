@@ -68,6 +68,7 @@
             tools:listitem="@layout/hour_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
         <androidx.cardview.widget.CardView
+            android:id="@+id/detailsCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/hour_List"
@@ -194,12 +195,12 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:weightSum="4">
+                    android:weightSum="2">
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_weight="2">
+                        android:layout_weight="1">
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="0dp"
@@ -230,7 +231,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_weight="2">
+                        android:layout_weight="1">
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="0dp"
@@ -261,6 +262,14 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
+        <ImageView
+            app:layout_constraintTop_toBottomOf="@id/detailsCard"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/colorAccent"/>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -16,7 +16,7 @@ data class ApiObj  (
     @SerializedName("current") val current : Current,
     @SerializedName("hourly") val hourly : List<Hourly>,
     @SerializedName("daily") val daily : List<Daily>,
-    @SerializedName("alerts") val alerts : List<Alerts>?
+    @SerializedName("alerts") val alerts : List<Alerts>
 )
 
 data class Weather (

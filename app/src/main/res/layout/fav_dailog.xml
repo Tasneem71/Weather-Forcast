@@ -8,15 +8,18 @@
     android:background="#F3F2F7"
     app:cardElevation="10dp"
     app:cardUseCompatPadding="true"
-    android:padding="5dp">
+    android:padding="5dp"
+    app:cardBackgroundColor="@color/colorAccent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorAccent"
         android:weightSum="6"
         android:orientation="vertical">
+
         <include android:id="@+id/dialog_Content"
             layout="@layout/activity_scrolling" />
+
     </LinearLayout>
     <ImageView
         android:id="@+id/closeBtn"

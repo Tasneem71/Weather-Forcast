@@ -2,12 +2,13 @@ package com.example.weatherforcast.ui.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,28 +18,25 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherforcast.R
+import com.example.weatherforcast.data.entity.Alerts
 import com.example.weatherforcast.data.entity.ApiObj
 import com.example.weatherforcast.databinding.ActivityScrollingBinding
 import com.example.weatherforcast.ui.viewModel.ScrollingActivityVM
-import com.example.weatherforcast.utils.GPSUtils
+import com.example.weatherforcast.utils.NotificationUtils
 import com.google.android.gms.location.*
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ScrollingActivity : AppCompatActivity() {
-
-
-
+    lateinit var notificationUtils: NotificationUtils
     var yourLocationLat:Double=0.0
     var yourLocationLon:Double=0.0
     lateinit var binding:ActivityScrollingBinding
@@ -98,7 +96,7 @@ class ScrollingActivity : AppCompatActivity() {
     private fun observeViewModel(viewModel: ScrollingActivityVM) {
         //viewModel.loadingLiveData.observe(this, { showLoading(it) })
         // viewModel.errorLiveData.observe(this, { showError(it) })
-        viewModel.loadWeather(applicationContext,yourLocationLat,yourLocationLon).observe(this, { updateList(it) })
+        viewModel.loadWeather(applicationContext,-24.7847,-65.4315).observe(this, { updateList(it) })
 
     }
     private fun dateFormat( milliSeconds:Int):String{
@@ -119,23 +117,52 @@ class ScrollingActivity : AppCompatActivity() {
     }
     private fun updateList(items: List<ApiObj>?) {
         items?.let {
-            for (item in items){
+            for (item in items) {
                 item.apply {
-                    binding.temp.text= current.temp.toInt().toString()+"°"
-                    binding.describtion.text= current.weather.get(0).description.toString()
-                    binding.toolbarLayout.title= timezone
-                    binding.iContent.humidityTv.text=current.humidity.toString()
-                    binding.iContent.wendTv.text=current.wind_speed.toString()
-                    binding.iContent.pressureTv.text=current.pressure.toString()
-                    binding.iContent.cloudTv.text=current.clouds.toString()
-                    binding.iContent.Date.text= dateFormat(current.dt)
-                    binding.iContent.Time.text= timeFormat(current.dt)
+                    binding.temp.text = current.temp.toInt().toString() + "°"
+                    binding.describtion.text = current.weather.get(0).description.toString()
+                    binding.toolbarLayout.title = timezone
+                    binding.iContent.humidityTv.text = current.humidity.toString()
+                    binding.iContent.wendTv.text = current.wind_speed.toString()
+                    binding.iContent.pressureTv.text = current.pressure.toString()
+                    binding.iContent.cloudTv.text = current.clouds.toString()
+                    binding.iContent.Date.text = dateFormat(current.dt)
+                    binding.iContent.Time.text = timeFormat(current.dt)
                     dailyListAdapter.updateDays(daily)
                     hourlyListAdapter.updateHours(hourly)
+                    Toast.makeText(applicationContext,"alerts"+item.alerts?.toString(),Toast.LENGTH_SHORT).show()
+                }
+                if (!item.alerts.isNullOrEmpty()) {
+                    notifyUser(item.alerts)
+//                    Toast.makeText(this,"alerts",Toast.LENGTH_SHORT).show()
+//                    val tapNotification = Intent(applicationContext, ScrollingActivity::class.java)
+//                    tapNotification.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//                    notificationUtils = NotificationUtils(this)
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        var pendingIntent:PendingIntent=PendingIntent.getActivity(this, 1, tapNotification, PendingIntent.FLAG_ONE_SHOT)
+//                        val nb: NotificationCompat.Builder? = notificationUtils.getAndroidChannelNotification(item.alerts?.get(0)?.event, ""
+//                                +dateFormat(item.alerts?.get(0)?.start.toInt())+","+dateFormat(item.alerts?.get(0)?.end.toInt()) +"\n"+item.alerts?.get(0)?.description, pendingIntent)
+//                        notificationUtils.getManager()?.notify(2, nb?.build())
+//
+//                    }
                 }
             }
-        }
 
+        }
+    }
+
+    private fun notifyUser(alert:List<Alerts>){
+//        Toast.makeText(this,"alerts",Toast.LENGTH_SHORT).show()
+//        val tapNotification = Intent(applicationContext, ScrollingActivity::class.java)
+//        tapNotification.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        notificationUtils = NotificationUtils(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            var pendingIntent:PendingIntent=PendingIntent.getActivity(this, 1,
+//                tapNotification, PendingIntent.FLAG_ONE_SHOT)
+            val nb: NotificationCompat.Builder? = notificationUtils.getAndroidChannelNotification(alert.get(0)?.event, ""
+                    +dateFormat(alert.get(0)?.start.toInt())+","+dateFormat(alert.get(0)?.end.toInt()) +"\n"+alert.get(0)?.description)
+            notificationUtils.getManager()?.notify(3, nb?.build())
+    }
     }
 
     private fun updateCurrent(item: ApiObj) {
