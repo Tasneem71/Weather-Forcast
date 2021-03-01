@@ -55,27 +55,27 @@ class NotificationUtils(base: Context?) : ContextWrapper(base) {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun getAndroidChannelNotification( title: String,body: String,sound:Boolean): NotificationCompat.Builder? {
-        //val alertSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-//        if (sound){
-//            return NotificationCompat.Builder(
-//                    getApplicationContext(),ANDROID_CHANNEL_ID)
-//                    .setSmallIcon(R.drawable.ic_baseline_wb_sunny_24)
-//                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-//                    .setContentTitle(title)
-//                    .setContentText(body)
-//                    .setPriority(Notification.PRIORITY_HIGH)
-//                    // what works on tap notification .setContentIntent(start)
-//                    .setOngoing(false)
-//        }else{
+        val alertSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        if (sound){
+            return NotificationCompat.Builder(
+                    getApplicationContext(),ANDROID_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_baseline_wb_sunny_24)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setContentTitle(title)
+                    .setContentText(body)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    // what works on tap notification .setContentIntent(start)
+                    .setOngoing(false)
+        }else{
         return NotificationCompat.Builder(
             getApplicationContext(),ANDROID_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_baseline_wb_sunny_24)
-            .setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.getPackageName() + "/" + R.raw.ring))
+            .setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.getPackageName() + "/" + R.raw.rr))
             .setContentTitle(title)
             .setContentText(body)
             .setPriority(Notification.PRIORITY_HIGH)
             // what works on tap notification .setContentIntent(start)
             .setOngoing(false)
-        //}
+        }
     }
 }

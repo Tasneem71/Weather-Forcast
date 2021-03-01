@@ -36,6 +36,9 @@ import com.example.weatherforcast.ui.viewModel.ScrollingActivityVM
 import com.example.weatherforcast.utils.NotificationUtils
 import com.google.android.gms.location.*
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -56,18 +59,18 @@ class ScrollingActivity : AppCompatActivity() {
     var lon: String=""
     var loc:Boolean=true
     var lang:String=""
+    var timezone:String=""
     var unit:String=""
 
     var handler = Handler(Handler.Callback {
         Toast.makeText(applicationContext,"location:"+yourLocationLat+","+yourLocationLon,Toast.LENGTH_SHORT).show()
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val editor:SharedPreferences.Editor =  prefs.edit()
-         editor.putString("lat", ""+yourLocationLat)
-         editor.putString("lon", ""+yourLocationLon)
-         editor.apply()
-        lon=prefs.getString("lon", "-24.7847").toString()
-        lat= prefs.getString("lat", "-65.4315").toString()
-        Toast.makeText(applicationContext,"location:"+yourLocationLat+","+yourLocationLon,Toast.LENGTH_SHORT).show()
+        editor.putString("lat", yourLocationLat.toString())
+        editor.putString("lon", yourLocationLon.toString())
+        editor.commit()
+        lon=prefs.getString("lon", "").toString()
+        lat= prefs.getString("lat", "").toString()
         observeViewModel(scrollingActivityViewModal)
         true
     })
@@ -93,29 +96,27 @@ class ScrollingActivity : AppCompatActivity() {
         val saveRequest = PeriodicWorkRequest.Builder(WorkerApi::class.java,15, TimeUnit.MINUTES).addTag("up").build()
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork("up", ExistingPeriodicWorkPolicy.REPLACE,saveRequest)
 
-
-//        val timeZone=intent.getStringExtra("timeZone")
-//        if(!timeZone.isNullOrEmpty()){
-//            Toast.makeText(this,"you have arrived"+ timeZone,Toast.LENGTH_SHORT).show()
-//
-//        }
-//        else{
-
             scrollingActivityViewModal = ViewModelProvider(this,
                     ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(ScrollingActivityVM::class.java)
             findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout).title = " "
             initUI()
-        //}
 
         loc=prefs.getBoolean("USE_DEVICE_LOCATION", true)
         unit=prefs.getString("UNIT_SYSTEM", SettingsEnum.IMPERIAL.Value).toString()
         lang=prefs.getString("APP_LANG", SettingsEnum.ENGLISH.Value).toString()
         lon=prefs.getString("lon", ("")).toString()
         lat=prefs.getString("lat", ("")).toString()
-        observeViewModel(scrollingActivityViewModal)
+        timezone=prefs.getString("timezone", ("")).toString()
+        if(!timezone.isNullOrEmpty()) {
+            getObjByLatLon()
+        }
+
         if(loc){
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             getLastLocation()
+        }
+        else{
+            observeViewModel(scrollingActivityViewModal)
         }
 //        val findLocation= GPSUtils()
 //        findLocation.findDeviceLocation(this)
@@ -239,6 +240,17 @@ class ScrollingActivity : AppCompatActivity() {
             editor.commit()
 
         }
+
+    }
+
+    private fun getObjByLatLon() {
+        Log.i("ola", "timezone"+timezone)
+        CoroutineScope(Dispatchers.IO).launch {
+            var weather= scrollingActivityViewModal.getApiObjFromRoom(timezone)
+            Log.i("ola", "weather"+weather)
+            updateCurrent(weather)
+        }
+
 
     }
 
