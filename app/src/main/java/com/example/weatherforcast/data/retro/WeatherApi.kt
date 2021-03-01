@@ -11,7 +11,8 @@ interface WeatherApi {
     suspend fun getCurrentWeatherByLatLng(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("units") units: String = "imperial",
+        @Query("lang") lang: String,
+        @Query("units") units: String,
         @Query("exclude") exclude: String = "minutely",
         @Query("appid") appid: String = API_KEY
     ): Response<ApiObj>

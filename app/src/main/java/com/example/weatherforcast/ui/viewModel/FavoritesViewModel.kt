@@ -1,4 +1,4 @@
-package com.example.weatherforcast
+package com.example.weatherforcast.ui.viewModel
 
 import android.app.Application
 import android.content.Context
@@ -25,8 +25,8 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
         localDataSource = LocalDataSource(application)
     }
 
-    public fun loadWeather(context:Context,lat:Double,lon:Double) : LiveData<List<ApiObj>> {
-        return apiRepository.fetchWeatherData(context,lat, lon)
+    public fun loadWeather(context: Context, lat:Double, lon:Double,lang:String,unit:String) : LiveData<List<ApiObj>> {
+        return apiRepository.fetchWeatherData(context,lat, lon,lang,unit)
     }
 
     public fun getApiObj() : LiveData<ApiObj> {

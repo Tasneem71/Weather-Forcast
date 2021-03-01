@@ -1,5 +1,6 @@
 package com.example.weatherforcast.data.roomdb
 
+import android.util.Log
 import androidx.room.TypeConverter
 import com.example.weatherforcast.data.entity.Alerts
 import com.example.weatherforcast.data.entity.Daily
@@ -24,11 +25,10 @@ class Converters {
     fun jsonToDailyList(value: String) = Gson().fromJson(value, Array<Daily>::class.java).toList()
 
     @TypeConverter
-    fun jsonToAlertList(value: String?): List<Alerts> {
-        if(value==null)
+    fun jsonToAlertList(value: String?): List<Alerts>? {
+        value?.let {
+            return Gson().fromJson(value, Array<Alerts>::class.java)?.toList()
+        }
             return emptyList()
-        else
-            return Gson().fromJson(value, Array<Alerts>::class.java).toList()
-
     }
 }

@@ -2,17 +2,16 @@ package com.example.weatherforcast.ui.view
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.net.Uri
+import android.os.*
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -21,10 +20,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.example.weatherforcast.R
+import com.example.weatherforcast.SettingsActivity
+import com.example.weatherforcast.WorkerApi
 import com.example.weatherforcast.data.entity.Alerts
 import com.example.weatherforcast.data.entity.ApiObj
+import com.example.weatherforcast.data.retro.SettingsEnum
 import com.example.weatherforcast.databinding.ActivityScrollingBinding
 import com.example.weatherforcast.ui.viewModel.ScrollingActivityVM
 import com.example.weatherforcast.utils.NotificationUtils
@@ -32,21 +38,35 @@ import com.google.android.gms.location.*
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+import java.util.concurrent.TimeUnit
 
 
 class ScrollingActivity : AppCompatActivity() {
     lateinit var notificationUtils: NotificationUtils
     var yourLocationLat:Double=0.0
     var yourLocationLon:Double=0.0
+    lateinit var prefs: SharedPreferences
     lateinit var binding:ActivityScrollingBinding
     private lateinit var scrollingActivityViewModal: ScrollingActivityVM
     var dailyListAdapter = DayAdapter(arrayListOf())
     var hourlyListAdapter = HourAbapter(arrayListOf())
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
+    var lat: String=""
+    var lon: String=""
+    var loc:Boolean=true
+    var lang:String=""
+    var unit:String=""
 
     var handler = Handler(Handler.Callback {
+        Toast.makeText(applicationContext,"location:"+yourLocationLat+","+yourLocationLon,Toast.LENGTH_SHORT).show()
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor:SharedPreferences.Editor =  prefs.edit()
+         editor.putString("lat", ""+yourLocationLat)
+         editor.putString("lon", ""+yourLocationLon)
+         editor.apply()
+        lon=prefs.getString("lon", "-24.7847").toString()
+        lat= prefs.getString("lat", "-65.4315").toString()
         Toast.makeText(applicationContext,"location:"+yourLocationLat+","+yourLocationLon,Toast.LENGTH_SHORT).show()
         observeViewModel(scrollingActivityViewModal)
         true
@@ -57,24 +77,46 @@ class ScrollingActivity : AppCompatActivity() {
         binding = ActivityScrollingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        val timeZone=intent.getStringExtra("timeZone")
-        if(!timeZone.isNullOrEmpty()){
-            Toast.makeText(this,"you have arrived"+ timeZone,Toast.LENGTH_SHORT).show()
+        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val intent = Intent()
+            val packageName = packageName
+            val pm: PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
         }
-        else{
 
-            scrollingActivityViewModal = ViewModelProvider(
-                    this,
+        val saveRequest = PeriodicWorkRequest.Builder(WorkerApi::class.java,15, TimeUnit.MINUTES).addTag("up").build()
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork("up", ExistingPeriodicWorkPolicy.REPLACE,saveRequest)
+
+
+//        val timeZone=intent.getStringExtra("timeZone")
+//        if(!timeZone.isNullOrEmpty()){
+//            Toast.makeText(this,"you have arrived"+ timeZone,Toast.LENGTH_SHORT).show()
+//
+//        }
+//        else{
+
+            scrollingActivityViewModal = ViewModelProvider(this,
                     ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(ScrollingActivityVM::class.java)
             findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout).title = " "
             initUI()
+        //}
 
-
+        loc=prefs.getBoolean("USE_DEVICE_LOCATION", true)
+        unit=prefs.getString("UNIT_SYSTEM", SettingsEnum.IMPERIAL.Value).toString()
+        lang=prefs.getString("APP_LANG", SettingsEnum.ENGLISH.Value).toString()
+        lon=prefs.getString("lon", ("")).toString()
+        lat=prefs.getString("lat", ("")).toString()
+        observeViewModel(scrollingActivityViewModal)
+        if(loc){
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            getLastLocation()
         }
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        getLastLocation()
 //        val findLocation= GPSUtils()
 //        findLocation.findDeviceLocation(this)
 //        Toast.makeText(this,"location:"+findLocation.getLatitude()+","+findLocation.getLongitude(),Toast.LENGTH_SHORT).show()
@@ -96,7 +138,13 @@ class ScrollingActivity : AppCompatActivity() {
     private fun observeViewModel(viewModel: ScrollingActivityVM) {
         //viewModel.loadingLiveData.observe(this, { showLoading(it) })
         // viewModel.errorLiveData.observe(this, { showError(it) })
-        viewModel.loadWeather(applicationContext,-24.7847,-65.4315).observe(this, { updateList(it) })
+//        var loc=prefs.getBoolean("USE_DEVICE_LOCATION", false).toString()
+//        var unit=prefs.getString("UNIT_SYSTEM", SettingsEnum.IMPERIAL.Value)
+//        var lang= prefs.getString("APP_LANG", SettingsEnum.ENGLISH.Value)
+//        var lon=java.lang.Double.longBitsToDouble(prefs.getLong("lon", java.lang.Double.doubleToRawLongBits(0.0)))
+//        var lat=java.lang.Double.longBitsToDouble(prefs.getLong("lat", java.lang.Double.doubleToRawLongBits(0.0)))
+        Log.i("ola", "location:" + lang + "," + unit + " " + loc + " " + lat + " " + lon)
+        viewModel.loadWeatherObj(applicationContext, lat.toDouble(), lon.toDouble(), lang, unit).observe(this, { updateCurrent(it) })
 
     }
     private fun dateFormat( milliSeconds:Int):String{
@@ -167,6 +215,7 @@ class ScrollingActivity : AppCompatActivity() {
 
     private fun updateCurrent(item: ApiObj) {
 
+        item?.let {
                 item.apply {
                     binding.temp.text= current.temp.toInt().toString()+"°"
                     binding.describtion.text= current.weather.get(0).description.toString()
@@ -181,6 +230,15 @@ class ScrollingActivity : AppCompatActivity() {
                     hourlyListAdapter.updateHours(hourly)
                 }
 
+            item.alerts?.let {
+                notifyUser(it)
+            }
+
+            val editor: SharedPreferences.Editor = prefs.edit()
+            editor.putString("timezone", item.timezone)
+            editor.commit()
+
+        }
 
     }
 
@@ -196,9 +254,17 @@ class ScrollingActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
 
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_settings -> {
+                val intent: Intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+                true
+            }
             R.id.action_favorites -> {
                 val intent: Intent = Intent(this,FavoritesActivity::class.java)
+                startActivity(intent)
+                true}
+            R.id.action_Alerts -> {
+                val intent: Intent = Intent(this,AlertActivity::class.java)
                 startActivity(intent)
                 true}
             else -> super.onOptionsItemSelected(item)
@@ -310,4 +376,7 @@ class ScrollingActivity : AppCompatActivity() {
 //        Log.i("oncreate","egergerg")
 //        ScrollingActivityViewModal.getApiObj().observe(this,
 //            Observer<ApiObj> { tasks -> updateList(tasks) })
+
+
+    //-24.7847,-65.4315
 }

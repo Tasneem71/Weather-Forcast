@@ -2,6 +2,7 @@ package com.example.weatherforcast.data.roomdb
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import com.example.weatherforcast.data.entity.AlarmObj
 import com.example.weatherforcast.data.entity.ApiObj
 
 class LocalDataSource {
@@ -12,6 +13,10 @@ class LocalDataSource {
 
     fun getAll(): LiveData<List<ApiObj>> {
         return apiObjDao.getAllApiObj()
+    }
+
+    fun getAllList(): List<ApiObj> {
+        return apiObjDao.getAllList()
     }
 
     suspend fun insert(apiObj: ApiObj) {
@@ -28,6 +33,18 @@ class LocalDataSource {
 
      fun getApiObj(timeZone:String) :ApiObj {
         return apiObjDao.getApiObj(timeZone)
+    }
+
+    suspend fun deleteAlarmObj(id: Int) {
+        apiObjDao.deleteAlarmObj(id)
+    }
+
+    fun getAllAlarmObj(): LiveData<List<AlarmObj>> {
+        return apiObjDao.getAllAlarms()
+    }
+
+    suspend fun insertAlarm(alarmObj: AlarmObj):Long {
+        return apiObjDao.insertAlarm(alarmObj)
     }
 
 }

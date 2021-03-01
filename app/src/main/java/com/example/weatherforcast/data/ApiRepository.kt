@@ -18,6 +18,7 @@ class ApiRepository {
     val loadingLiveData = MutableLiveData<Boolean>()
     val errorLiveData = MutableLiveData<Boolean>()
     val WeatherLiveData = MutableLiveData<ApiObj>()
+    var weatherObj=MutableLiveData<ApiObj>()
 
     constructor(application: Application) {
         localDataSource = LocalDataSource(application)
@@ -25,25 +26,76 @@ class ApiRepository {
     }
 
 
-    fun fetchWeatherData(context: Context,lat:Double,lon:Double) : LiveData<List<ApiObj>> {
-        if(isOnline(context)){
-        loadingLiveData.postValue(true)
-        val exceptionHandlerException = CoroutineExceptionHandler { _, exeption ->exeption.printStackTrace()
-            Log.i("log","exption")
+    fun fetchWeatherData(context: Context, lat: Double, lon: Double, lang: String, unit: String): LiveData<List<ApiObj>> {
+        //  loadingLiveData.postValue(true)
+        /* val exceptionHandlerException = CoroutineExceptionHandler { _, _ ->
             errorLiveData.value = true
             loadingLiveData.postValue(false)
-        }
-        CoroutineScope(Dispatchers.IO + exceptionHandlerException).launch {
-            val response = WeatherServes.apiService.getCurrentWeatherByLatLng(lat,lon)
-            if (response.isSuccessful) {
-                response.body()?.let { localDataSource.insert(it) }
-
+        }*/
+        if (isOnline(context)) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = weatherService.apiService.getCurrentWeatherByLatLng(lat, lon, lang, unit)
+                try {
+                    if (response.isSuccessful) {
+                        response.body()?.let { localDataSource.insert(it) }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
-        }}
-        return  localDataSource.getAll()
+        }
+        return localDataSource.getAll()
     }
 
+    fun fetchWeatherObj(context: Context, lat: Double, lon: Double, lang: String, unit: String){
+        // loadingLiveData.postValue(true)
+        /* val exceptionHandlerException = CoroutineExceptionHandler { _, _ ->
+            errorLiveData.value = true
+            loadingLiveData.postValue(false)
+        }*/
+        if (isOnline(context)) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = weatherService.apiService.getCurrentWeatherByLatLng(lat, lon, lang, unit)
+                try {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            localDataSource.insert(it)
+                            weatherObj.postValue(it)
+                        }
 
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+            }
+        }
+    }
+    fun UpdateWeatherData(lang: String, unit: String){
+        /* val exceptionHandlerException = CoroutineExceptionHandler { _, _ ->
+            errorLiveData.value = true
+            loadingLiveData.postValue(false)
+        }*/
+        CoroutineScope(Dispatchers.IO).launch {
+            var weatherData=localDataSource.getAllList()
+            for (item in weatherData) {
+                val response =
+                        weatherService.apiService.getCurrentWeatherByLatLng(item.lat, item.lon, lang, unit)
+                try {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            localDataSource.insert(it)
+                            Log.i("ola","kkjhhf")
+                        }
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+            }
+        }
+    }
 
     fun isOnline(context: Context): Boolean {
         val connectivityManager =

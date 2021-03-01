@@ -6,12 +6,12 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherforcast.FavoritesViewModel
+import com.example.weatherforcast.ui.viewModel.FavoritesViewModel
 import com.example.weatherforcast.data.entity.ApiObj
 import com.example.weatherforcast.databinding.FavItemBinding
 import java.util.*
 
-class FavoriteAdapter(var FavList: ArrayList<ApiObj>,favoritesViewModel: FavoritesViewModel,context:Context) : RecyclerView.Adapter<FavoriteAdapter.VH>() {
+class FavoriteAdapter(var FavList: ArrayList<ApiObj>, favoritesViewModel: FavoritesViewModel, context:Context) : RecyclerView.Adapter<FavoriteAdapter.VH>() {
     lateinit var favoritesViewModel: FavoritesViewModel
     lateinit var context: Context
     init {
@@ -38,11 +38,8 @@ class FavoriteAdapter(var FavList: ArrayList<ApiObj>,favoritesViewModel: Favorit
         holder.myView.favDesc.text =FavList[position].current.weather.get(0).description.toString()
         holder.myView.timezoneTxt.text = FavList[position].timezone.toString()
         holder.myView.favTemb.text = FavList[position].current.temp.toInt().toString()+"°"
-        holder.myView.favItem.setOnClickListener {
-            val intent: Intent = Intent(context,ScrollingActivity::class.java)
-            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra("timeZone",FavList[position].timezone)
-            context.startActivity(intent)
+        holder.myView.locImg.setOnClickListener {
+            favoritesViewModel.onRemoveClick(FavList[position].timezone)
         }
 
         holder.myView.favItem.setOnClickListener {

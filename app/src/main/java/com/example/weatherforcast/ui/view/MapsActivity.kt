@@ -1,4 +1,4 @@
-package com.example.weatherforcast.ui
+package com.example.weatherforcast.ui.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,13 +6,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import com.example.weatherforcast.R
-import com.example.weatherforcast.ui.view.FavoritesActivity
+import com.example.weatherforcast.SettingsActivity
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -20,7 +19,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var confirmBtn: Button
     private  var lat: Double=0.0
-    private  var lang: Double=0.0
+    private  var lon: Double=0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -30,7 +29,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         confirmBtn=findViewById(R.id.confirmBtn)
         confirmBtn.setOnClickListener {
-            if (lat==0.0 || lang==0.0) {
+            if (lat==0.0 || lon==0.0) {
                 Toast.makeText(
                     this,
                     "please select place , ",
@@ -39,14 +38,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 Toast.makeText(
                     this,
-                    ", " + lang+lat,
+                    ", " + lon + lat,
                     Toast.LENGTH_SHORT
                 ).show()
-                val intent: Intent = Intent(this,FavoritesActivity::class.java)
-                intent.putExtra("lat",lat)
-                intent.putExtra("lon",lang)
-                intent.putExtra("id",1)
-                startActivity(intent)
+                if(intent.hasExtra("mapId")){
+                    val intent: Intent = Intent(this, FavoritesActivity::class.java)
+                    intent.putExtra("lat", lat)
+                    intent.putExtra("lon", lon)
+                    intent.putExtra("id", 1)
+                    startActivity(intent)
+                }
+                else{
+                    val intent: Intent = Intent(this, SettingsActivity::class.java)
+                    // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    intent.putExtra("lat", lat)
+                    intent.putExtra("lon", lon)
+                    intent.putExtra("id", 1)
+                    startActivity(intent)
+                }
                 finish()
             }
         }
@@ -74,7 +83,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.addMarker(MarkerOptions().position(point))
             mMap.moveCamera(CameraUpdateFactory.newLatLng(point))
             lat=point.latitude
-            lang= point.longitude
+            lon= point.longitude
         }
 
         // Add a marker in Sydney and move the camera

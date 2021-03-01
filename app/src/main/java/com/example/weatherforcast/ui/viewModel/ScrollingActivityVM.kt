@@ -21,8 +21,8 @@ class ScrollingActivityVM (application: Application) : AndroidViewModel(applicat
         localDataSource = LocalDataSource(application)
     }
 
-    public fun loadWeather(context:Context,lat:Double,lon:Double) : LiveData<List<ApiObj>> {
-        return apiRepository.fetchWeatherData(context,lat, lon)
+    public fun loadWeather(context: Context, lat:Double, lon:Double,lang:String,unit:String) : LiveData<List<ApiObj>> {
+        return apiRepository.fetchWeatherData(context,lat, lon,lang,unit)
     }
 
     public fun getApiObj() : LiveData<ApiObj> {
@@ -33,10 +33,10 @@ class ScrollingActivityVM (application: Application) : AndroidViewModel(applicat
         return localDataSource.getApiObj(timeZone)
     }
 
-    companion object {
-        var lat = "33.441792"
-        var lon = "-94.037689"
 
+    public fun loadWeatherObj(context: Context,lat:Double,lon:Double,lang:String,unit:String) : LiveData<ApiObj>{
+        apiRepository.fetchWeatherObj(context,lat,lon,lang,unit)
+        return apiRepository.weatherObj
     }
 }
 

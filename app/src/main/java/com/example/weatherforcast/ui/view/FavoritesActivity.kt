@@ -11,13 +11,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weatherforcast.FavoritesViewModel
+import com.example.weatherforcast.ui.viewModel.FavoritesViewModel
 import com.example.weatherforcast.R
 import com.example.weatherforcast.data.entity.ApiObj
+import com.example.weatherforcast.data.retro.SettingsEnum
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.example.weatherforcast.databinding.ActivityFavoritesBinding
 import com.example.weatherforcast.databinding.FavDailogBinding
-import com.example.weatherforcast.ui.MapsActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,7 +44,7 @@ class FavoritesActivity : AppCompatActivity() {
         if(intent.hasExtra("id")) {
             var lat = intent.getDoubleExtra("lat", 0.0)
             var lon = intent.getDoubleExtra("lon", 0.0)
-            observeViewModel(viewModel,lat,lon)
+            observeViewModel(viewModel, lat, lon,SettingsEnum.ENGLISH.Value,SettingsEnum.IMPERIAL.Value)
             Toast.makeText(this,  " " + lon+lat,Toast.LENGTH_SHORT).show()
         }
         else {
@@ -52,7 +52,8 @@ class FavoritesActivity : AppCompatActivity() {
         }
 
         binding.addBtn.setOnClickListener{
-            val intent: Intent = Intent(this,MapsActivity::class.java)
+            val intent: Intent = Intent(this,
+                MapsActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -76,10 +77,11 @@ class FavoritesActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeViewModel(viewModel: FavoritesViewModel, lat:Double, lon:Double) {
-        viewModel.loadWeather(applicationContext,lat, lon).observe(this, {
+    private fun observeViewModel(viewModel: FavoritesViewModel, lat: Double, lon: Double,lang:String,unit:String) {
+        viewModel.loadWeather(applicationContext, lat, lon, lang, unit).observe(this, {
             favoriteAdapter.updateHours(it)
         })
+
     }
 
     private fun getWeatherData(viewModel: FavoritesViewModel) {
