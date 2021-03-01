@@ -3,6 +3,7 @@ package com.example.weatherforcast.utils
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Color
@@ -53,16 +54,28 @@ class NotificationUtils(base: Context?) : ContextWrapper(base) {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun getAndroidChannelNotification( title: String,body: String): NotificationCompat.Builder? {
-        val alertSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+    fun getAndroidChannelNotification( title: String,body: String,sound:Boolean): NotificationCompat.Builder? {
+        //val alertSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+//        if (sound){
+//            return NotificationCompat.Builder(
+//                    getApplicationContext(),ANDROID_CHANNEL_ID)
+//                    .setSmallIcon(R.drawable.ic_baseline_wb_sunny_24)
+//                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+//                    .setContentTitle(title)
+//                    .setContentText(body)
+//                    .setPriority(Notification.PRIORITY_HIGH)
+//                    // what works on tap notification .setContentIntent(start)
+//                    .setOngoing(false)
+//        }else{
         return NotificationCompat.Builder(
             getApplicationContext(),ANDROID_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_baseline_wb_sunny_24)
-            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+            .setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.getPackageName() + "/" + R.raw.ring))
             .setContentTitle(title)
             .setContentText(body)
             .setPriority(Notification.PRIORITY_HIGH)
             // what works on tap notification .setContentIntent(start)
             .setOngoing(false)
+        //}
     }
 }

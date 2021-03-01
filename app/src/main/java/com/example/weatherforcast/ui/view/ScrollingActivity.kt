@@ -208,7 +208,7 @@ class ScrollingActivity : AppCompatActivity() {
 //            var pendingIntent:PendingIntent=PendingIntent.getActivity(this, 1,
 //                tapNotification, PendingIntent.FLAG_ONE_SHOT)
             val nb: NotificationCompat.Builder? = notificationUtils.getAndroidChannelNotification(alert.get(0)?.event, ""
-                    +dateFormat(alert.get(0)?.start.toInt())+","+dateFormat(alert.get(0)?.end.toInt()) +"\n"+alert.get(0)?.description)
+                    +dateFormat(alert.get(0)?.start.toInt())+","+dateFormat(alert.get(0)?.end.toInt()) +"\n"+alert.get(0)?.description,true)
             notificationUtils.getManager()?.notify(3, nb?.build())
     }
     }

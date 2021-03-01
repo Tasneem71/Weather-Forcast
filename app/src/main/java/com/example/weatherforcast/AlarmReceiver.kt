@@ -1,17 +1,16 @@
 package com.example.weatherforcast
 
-import android.app.AlarmManager
-import android.app.Application
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.FLAG_INSISTENT
 import androidx.preference.PreferenceManager
 import com.example.weatherforcast.data.roomdb.LocalDataSource
 import com.example.weatherforcast.utils.NotificationUtils
@@ -31,7 +30,9 @@ class AlarmReceiver : BroadcastReceiver() {
         val c: Calendar = Calendar.getInstance()
         val LongEndTime = intent.getLongExtra("endTime", 0)
         var id = intent.getIntExtra("id", 0)
+        var sound=intent.getBooleanExtra("sound",true)
         Log.i("alarmID", "" + id)
+        Log.i("alarmٍSound", "" + sound)
         Log.i("alarm", " " + LongEndTime + "  " + c.timeInMillis)
         Toast.makeText(context, " " + LongEndTime + "  " + c.timeInMillis, Toast.LENGTH_SHORT).show()
         if (LongEndTime < c.timeInMillis) {
@@ -51,7 +52,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 val apiObj=localDataSource.getApiObj(timeZone)
                 val event = intent.getStringExtra("event")
                 if (apiObj.current.weather.get(0).description.contains(event + "", ignoreCase = true)) {
-                    notifyUser(context,event+"",apiObj.current.weather.get(0).description,id)
+                    notifyUser(context,event+"",apiObj.current.weather.get(0).description,id,sound)
                 }
 
             }
@@ -71,10 +72,14 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
 
-    private fun notifyUser(context: Context, event: String,describtion:String,id: Int) {
+    private fun notifyUser(context: Context, event: String,describtion:String,id: Int,sound:Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val nb: NotificationCompat.Builder? = notificationUtils.getAndroidChannelNotification("Event: "+event, "Be aware there is " + describtion)
-            notificationUtils.getManager()?.notify(id, nb?.build())
+            val nb: NotificationCompat.Builder? = notificationUtils.getAndroidChannelNotification("Event: "+event, "Be aware there is " + describtion,sound)
+            val notification=nb?.build()
+            if(!sound){
+                notification?.flags= FLAG_INSISTENT
+            }
+            notificationUtils.getManager()?.notify(id, notification)
         }
 
     }

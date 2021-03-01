@@ -139,42 +139,48 @@ class AlertActivity : AppCompatActivity() {
 
             }
 
-            DatePickerDialog(this, dateSetListener,
+            var datePickerDialog=DatePickerDialog(this, dateSetListener,
                     calStart.get(Calendar.YEAR),
                     calStart.get(Calendar.MONTH),
                     calStart.get(Calendar.DAY_OF_MONTH)).show()
+            //datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
 
         }
         bindingDialog.addAlarmBtn.setOnClickListener{
-            alarmObj.description=bindingDialog.DescribtionTv.text.toString()
-            alarmObj.event=getEvent()
-            if(bindingDialog.loopSound.isChecked)
-                alarmObj.sound=false
-            else
-                alarmObj.sound = true
 
-            var id=0
-            var jop=CoroutineScope(Dispatchers.IO).launch {
-                id= viewModel.insertAlarmObj(alarmObj).toInt()
-                //handler.sendEmptyMessage(0)
+            if(calStart.timeInMillis<calEnd.timeInMillis) {
+                alarmObj.description = bindingDialog.DescribtionTv.text.toString()
+                alarmObj.event = getEvent()
+                if (bindingDialog.loopSound.isChecked)
+                    alarmObj.sound = false
+                else
+                    alarmObj.sound = true
+
+                var id = 0
+                var jop = CoroutineScope(Dispatchers.IO).launch {
+                    id = viewModel.insertAlarmObj(alarmObj).toInt()
+                    //handler.sendEmptyMessage(0)
+                }
+                jop.invokeOnCompletion { setAlarm(applicationContext, id, calStart, calEnd, alarmObj.event,alarmObj.sound) }
+
+
+            }else{
+                Toast.makeText(this, "Please Make Sure Your Timing is correct"  , Toast.LENGTH_LONG).show()
             }
-            jop.invokeOnCompletion { setAlarm(applicationContext,id,calStart,calEnd,alarmObj.event) }
-
-
-
-
             dialog.dismiss()
         }
         dialog.show()
     }
 
-    private fun setAlarm(context:Context,id:Int,calStart:Calendar,calEnd: Calendar,event:String) {
+    private fun setAlarm(context:Context,id:Int,calStart:Calendar,calEnd: Calendar,event:String,sound:Boolean) {
         Log.i("alarm","the first")
         val mIntent = Intent(context, AlarmReceiver::class.java)
         mIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         mIntent.putExtra("endTime",calEnd.timeInMillis)
         mIntent.putExtra("id",id)
         mIntent.putExtra("event",event)
+        mIntent.putExtra("sound",sound)
         val mPendingIntent = PendingIntent.getBroadcast(this, id, mIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         Log.i("cal",""+calStart)
         val mAlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
