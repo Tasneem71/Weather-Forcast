@@ -51,7 +51,7 @@ class ScrollingActivity : AppCompatActivity() {
     lateinit var prefs: SharedPreferences
     lateinit var binding:ActivityScrollingBinding
     private lateinit var scrollingActivityViewModal: ScrollingActivityVM
-    var dailyListAdapter = DayAdapter(arrayListOf())
+    var dailyListAdapter = DayAdapter(arrayListOf(),this)
     var hourlyListAdapter = HourAbapter(arrayListOf())
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -131,7 +131,7 @@ class ScrollingActivity : AppCompatActivity() {
 
         }
         binding.iContent.dayList.apply {
-            layoutManager = LinearLayoutManager(applicationContext)
+            layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             adapter = dailyListAdapter
         }
     }

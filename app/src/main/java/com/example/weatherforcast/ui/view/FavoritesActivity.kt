@@ -28,7 +28,7 @@ class FavoritesActivity : AppCompatActivity() {
     private lateinit var addBtn: FloatingActionButton
     lateinit var favoriteAdapter : FavoriteAdapter
     lateinit var bindingDialog: FavDailogBinding
-    var dailyListAdapter = DayAdapter(arrayListOf())
+    var dailyListAdapter = DayAdapter(arrayListOf(),this)
     var hourlyListAdapter = HourAbapter(arrayListOf())
     lateinit var dialog: Dialog
 

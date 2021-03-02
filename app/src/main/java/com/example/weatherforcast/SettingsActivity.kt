@@ -1,19 +1,21 @@
 package com.example.weatherforcast
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import com.example.weatherforcast.ui.view.MapsActivity
-import androidx.preference.*
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
-
+import com.example.weatherforcast.ui.view.MapsActivity
+import java.util.*
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -138,4 +140,14 @@ class SettingsActivity : AppCompatActivity() {
         //Context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this)
 
     }
+
+    fun setLocale(activity: Activity, languageCode: String?) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val resources: Resources = activity.resources
+        val config: Configuration = resources.getConfiguration()
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.getDisplayMetrics())
+    }
+
 }

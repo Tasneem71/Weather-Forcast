@@ -135,8 +135,19 @@
     <string-array name="event_options">
         <item>Rain</item>
         <item>snow</item>
-        <item>mist/fog</item>
+        <item>fog</item>
         <item>thunderstorm</item>
+        <item>cloud</item>
+        <item>wend</item>
+
     </string-array>
+
+    <string name="Saturday">Saturday</string>
+    <string name="Sunday">Sunday</string>
+    <string name="Monday">Monday</string>
+    <string name="Tuesday">Tuesday</string>
+    <string name="Wednesday">Wednesday</string>
+    <string name="Friday">Friday</string>
+    <string name="Thursday">Thursday</string>
 
 </resources>

@@ -192,11 +192,14 @@ class AlertActivity : AppCompatActivity() {
 
     private fun getEvent(): String {
         var repetation = ""
+        var arr = this.resources.getStringArray(R.array.event_options)
         when (bindingDialog.eventSpinner.getSelectedItemPosition()) {
-            0 -> repetation = "rain"
-            1 -> repetation = "snow"
-            2 -> repetation = "clear"
-            3 -> repetation = "thunderstorm"
+            0 -> repetation = arr[0]
+            1 -> repetation = arr[1]
+            2 -> repetation = arr[2]
+            3 -> repetation = arr[3]
+            2 -> repetation = arr[4]
+            3 -> repetation = arr[5]
         }
         return repetation
     }

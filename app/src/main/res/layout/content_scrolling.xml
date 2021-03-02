@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             tools:listitem="@layout/day_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
@@ -76,7 +76,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="8dp"
             app:cardBackgroundColor="@color/lightGreen"
             app:backgroundTint="@null">
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,7 +88,9 @@
                     android:id="@+id/details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/Details"/>
+                    android:text="@string/Details"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"/>
                 <View
                     android:id="@+id/firstline"
                     app:layout_constraintStart_toStartOf="parent"
@@ -97,17 +98,19 @@
                     app:layout_constraintTop_toBottomOf="@+id/details"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/darker_gray"/>
-                <View
+                    android:background="@android:color/white"/>
+                <LinearLayout
+                    android:orientation="vertical"
                     android:id="@+id/horizline"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/firstline"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_width="1dp"
-                    android:layout_height="30dp"
+                    android:layout_height="70dp"
                     android:layout_marginEnd="5dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@android:color/white"
+                    app:backgroundTint="@null"/>
                 <LinearLayout
                     android:id="@+id/firstrow"
                     app:layout_constraintStart_toStartOf="parent"
@@ -131,13 +134,17 @@
                                 android:id="@+id/cloud"
                                 android:text="@string/cloud"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/textColor"
+                                android:textSize="12dp"/>
                             <TextView
                                 android:id="@+id/cloud_tv"
                                 android:text="@string/cloud"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"/>
+                                android:layout_marginStart="5dp"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"/>
 
                         </LinearLayout>
                         <ImageView
@@ -162,13 +169,17 @@
                                 android:id="@+id/wend"
                                 android:text="@string/wend"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/textColor"
+                                android:textSize="12dp"/>
                             <TextView
                                 android:id="@+id/wend_tv"
                                 android:text="@string/wend"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"/>
+                                android:layout_marginStart="5dp"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"/>
 
                         </LinearLayout>
                         <ImageView
@@ -187,7 +198,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/firstrow"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@android:color/white"/>
                 <LinearLayout
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -210,13 +221,17 @@
                                 android:id="@+id/humidity"
                                 android:text="@string/Humidity"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/textColor"
+                                android:textSize="12dp"/>
                             <TextView
                                 android:id="@+id/humidity_tv"
                                 android:text="@string/Humidity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"/>
+                                android:layout_marginStart="5dp"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"/>
 
                         </LinearLayout>
                         <ImageView
@@ -241,13 +256,17 @@
                                 android:id="@+id/pressure"
                                 android:text="@string/Pressure"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/textColor"
+                                android:textSize="12dp"/>
                             <TextView
                                 android:id="@+id/pressure_tv"
                                 android:text="@string/Pressure"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"/>
+                                android:layout_marginStart="5dp"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"/>
 
                         </LinearLayout>
                         <ImageView

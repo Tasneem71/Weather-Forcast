@@ -32,7 +32,7 @@ class NotificationUtils(base: Context?) : ContextWrapper(base) {
             androidChannel = NotificationChannel(
                 ANDROID_CHANNEL_ID,
                 ANDROID_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             )
             androidChannel.enableLights(true)
             // Sets whether notification posted to this channel should vibrate.
@@ -55,7 +55,6 @@ class NotificationUtils(base: Context?) : ContextWrapper(base) {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun getAndroidChannelNotification( title: String,body: String,sound:Boolean): NotificationCompat.Builder? {
-        val alertSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         if (sound){
             return NotificationCompat.Builder(
                     getApplicationContext(),ANDROID_CHANNEL_ID)
@@ -70,7 +69,7 @@ class NotificationUtils(base: Context?) : ContextWrapper(base) {
         return NotificationCompat.Builder(
             getApplicationContext(),ANDROID_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_baseline_wb_sunny_24)
-            .setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.getPackageName() + "/" + R.raw.rr))
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
             .setContentTitle(title)
             .setContentText(body)
             .setPriority(Notification.PRIORITY_HIGH)
