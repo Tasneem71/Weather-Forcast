@@ -6,7 +6,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -19,7 +22,6 @@ import com.example.weatherforcast.data.entity.AlarmObj
 import com.example.weatherforcast.databinding.ActivityAlertBinding
 import com.example.weatherforcast.databinding.NewAlarmBinding
 import com.example.weatherforcast.ui.viewModel.AlartViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +38,7 @@ class AlertActivity : AppCompatActivity() {
     lateinit var dialog: Dialog
     var calStart = Calendar.getInstance()
     var calEnd = Calendar.getInstance()
+    lateinit var alarmObj:AlarmObj
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +48,7 @@ class AlertActivity : AppCompatActivity() {
         alertAdabter= AlertAdabter(arrayListOf(),viewModel,applicationContext)
         binding = ActivityAlertBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        alarmObj=AlarmObj("","","","",true,"")
 
         viewModel.getNavigate().observe(this, Observer<AlarmObj> {
             showDialog(it);
@@ -55,9 +59,110 @@ class AlertActivity : AppCompatActivity() {
 
         initUI()
 
+        binding.fromTimeImg.setOnClickListener { v ->
+
+            val hour = calStart.get(Calendar.HOUR)
+            val minute = calStart.get(Calendar.MINUTE)
+
+            val tpd = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+                calStart.set(Calendar.HOUR,h)
+                calStart.set(Calendar.MINUTE,m)
+                alarmObj.start= "$h : $m"
+                binding.fromTimeImg.text="$h : $m"
+
+                Toast.makeText(this, h.toString() + " : " + m +" : " , Toast.LENGTH_LONG).show()
+
+            }),hour,minute,false)
+
+            tpd.show()
+        }
+
+        binding.toTimeImg.setOnClickListener { v ->
+
+            val hour = calEnd.get(Calendar.HOUR)
+            val minute = calEnd.get(Calendar.MINUTE)
+
+            val tpd = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+                calEnd.set(Calendar.HOUR,h)
+                calEnd.set(Calendar.MINUTE,m)
+                alarmObj.end= "$h : $m"
+                binding.toTimeImg.text="$h : $m"
+
+                Toast.makeText(this, h.toString() + " : " + m  , Toast.LENGTH_LONG).show()
+
+            }),hour,minute,false)
+
+            tpd.show()
+
+        }
+
+        binding.calenderBtn.setOnClickListener { v ->
+            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                calStart.set(Calendar.YEAR, year)
+                calStart.set(Calendar.MONTH, monthOfYear)
+                calStart.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                calEnd.set(Calendar.YEAR, year)
+                calEnd.set(Calendar.MONTH, monthOfYear)
+                calEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                val myFormat = "dd.MM.yyyy" // mention the format you need
+                val sdf = SimpleDateFormat(myFormat, Locale.US)
+                alarmObj.Date = sdf.format(calStart.time)
+                binding.calenderTv.text=sdf.format(calStart.time)
+
+            }
+
+            var datePickerDialog=DatePickerDialog(this, dateSetListener,
+                    calStart.get(Calendar.YEAR),
+                    calStart.get(Calendar.MONTH),
+                    calStart.get(Calendar.DAY_OF_MONTH)).show()
+            //datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
+
+        }
+
+        binding.addAlarmBtn.setOnClickListener{
+
+            if(calStart.timeInMillis<calEnd.timeInMillis) {
+                alarmObj.description = binding.DescribtionTv.text.toString()
+                alarmObj.event = getEventActivity()
+                if (binding.loopSound.isChecked)
+                    alarmObj.sound = false
+                else
+                    alarmObj.sound = true
+
+                var id = 0
+                var jop = CoroutineScope(Dispatchers.IO).launch {
+                    id = viewModel.insertAlarmObj(alarmObj).toInt()
+                    //handler.sendEmptyMessage(0)
+                }
+                jop.invokeOnCompletion { setAlarm(applicationContext, id, calStart, calEnd, alarmObj.event,alarmObj.sound)}
+
+
+            }else{
+                Toast.makeText(this, "Please Make Sure Your Timing is correct"  , Toast.LENGTH_LONG).show()
+            }
+            binding.addAarmView.setVisibility(View.GONE)
+            binding.addBtn.setImageResource(R.drawable.ic_baseline_add_24)
+        }
+
         binding.addBtn.setOnClickListener { v ->
-            var alarmObj:AlarmObj=AlarmObj("","","","",true,"")
-            showDialog(alarmObj)
+
+
+            if (binding.addAarmView.getVisibility() == View.VISIBLE) {
+                TransitionManager.beginDelayedTransition(binding.firstPart,
+                        AutoTransition())
+                binding.addAarmView.setVisibility(View.GONE)
+                binding.addBtn.setImageResource(R.drawable.ic_baseline_add_24)
+            } else {
+                TransitionManager.beginDelayedTransition(binding.firstPart,
+                        AutoTransition())
+                binding.addAarmView.setVisibility(View.VISIBLE)
+                binding.addBtn.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+            }
+
+//            showDialog(alarmObj)
 
         }
 
@@ -138,6 +243,9 @@ class AlertActivity : AppCompatActivity() {
 
 
         }
+        bindingDialog.closeBtn.setOnClickListener {
+            dialog.dismiss()
+        }
         bindingDialog.addAlarmBtn.setOnClickListener{
 
             if(calStart.timeInMillis<calEnd.timeInMillis) {
@@ -185,6 +293,20 @@ class AlertActivity : AppCompatActivity() {
         var event = ""
         var arr = this.resources.getStringArray(R.array.event_options)
         when (bindingDialog.eventSpinner.getSelectedItemPosition()) {
+            0 -> event = arr[0]
+            1 -> event = arr[1]
+            2 -> event = arr[2]
+            3 -> event = arr[3]
+            4 -> event = arr[4]
+            5 -> event = arr[5]
+        }
+        return event
+    }
+
+    private fun getEventActivity(): String {
+        var event = ""
+        var arr = this.resources.getStringArray(R.array.event_options)
+        when (binding.eventSpinner.getSelectedItemPosition()) {
             0 -> event = arr[0]
             1 -> event = arr[1]
             2 -> event = arr[2]

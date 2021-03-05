@@ -61,5 +61,8 @@
     <string name="Friday">Friday</string>
     <string name="Thursday">Thursday</string>
     <string name="manageCities">Manage Cities:</string>
+    <string name="Alarms">Alarms</string>
+    <string name="addAlarm">+  Add</string>
+    <string name="save">+  Save</string>
 
 </resources>

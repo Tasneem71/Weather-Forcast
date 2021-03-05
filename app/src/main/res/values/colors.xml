@@ -10,9 +10,11 @@
 
     <color name="darkGray">#6F898C</color>
     <color name="lightGray">#F6F6F6</color>
+    <color name="medtGray">#C5C5C5</color>
 
     <color name="colorSecond">#09A8A8</color>
     <color name="colorAccent">#66b2b2</color>
+    <color name="lighterAccent">#70BCBC</color>
     <color name="textColor">#5CA5A5</color>
     <color name="lightGreen">#b2d8d8</color>
 
