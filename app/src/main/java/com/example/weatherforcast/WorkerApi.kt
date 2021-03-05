@@ -18,7 +18,7 @@ class WorkerApi(appContext: Context, workerParams: WorkerParameters):
         // Do the work here--in this case, upload the images.
         var unit=prefs.getString("UNIT_SYSTEM", SettingsEnum.IMPERIAL.Value).toString()
         var lang=prefs.getString("APP_LANG", SettingsEnum.ENGLISH.Value).toString()
-        weatherRepository.UpdateWeatherData(unit,lang,applicationContext)
+        weatherRepository.UpdateWeatherData(lang,unit,applicationContext)
         Log.i("tasneem","llllss")
         // Indicate whether the work finished successfully with the Result
         return Result.success()

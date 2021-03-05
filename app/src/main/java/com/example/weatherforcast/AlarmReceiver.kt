@@ -47,10 +47,10 @@ class AlarmReceiver : BroadcastReceiver() {
         } else {
             prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val timeZone = prefs.getString("timezone", "").toString()
+            val event = intent.getStringExtra("event")
             CoroutineScope(Dispatchers.IO).launch {
                 val localDataSource = LocalDataSource(context.applicationContext as Application)
                 val apiObj=localDataSource.getApiObj(timeZone)
-                val event = intent.getStringExtra("event")
                 if (apiObj.current.weather.get(0).description.contains(event + "", ignoreCase = true)) {
                     notifyUser(context,event+"",apiObj.current.weather.get(0).description,id,sound)
                 }

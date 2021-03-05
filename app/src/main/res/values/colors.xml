@@ -8,8 +8,17 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="darkGray">#6F898C</color>
+    <color name="lightGray">#F6F6F6</color>
+
     <color name="colorSecond">#09A8A8</color>
     <color name="colorAccent">#66b2b2</color>
     <color name="textColor">#5CA5A5</color>
     <color name="lightGreen">#b2d8d8</color>
+
+    <color name="semiTransparentColor">#4DFFFFFF</color>
+    <color name="semiTransparentColorBorder">#66FFFFFF</color>
+
+    <color name="conOrange">#EC6E4C</color>
+
 </resources>

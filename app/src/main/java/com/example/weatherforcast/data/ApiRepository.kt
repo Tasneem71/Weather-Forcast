@@ -22,6 +22,10 @@ class ApiRepository {
         weatherService = WeatherServes
     }
 
+    public fun getApiObjFromRoom(timeZone:String): ApiObj{
+        return localDataSource.getApiObj(timeZone)
+    }
+
 
     fun fetchWeatherData(context: Context, lat: Double, lon: Double, lang: String, unit: String): LiveData<List<ApiObj>> {
         if (isOnline(context)) {
@@ -65,6 +69,7 @@ class ApiRepository {
             CoroutineScope(Dispatchers.IO).launch {
                 var weatherData = localDataSource.getAllList()
                 for (item in weatherData) {
+                    Log.i("repo",lang+" "+unit)
                     val response =
                             weatherService.apiService.getCurrentWeatherByLatLng(item.lat, item.lon, lang, unit)
                     try {

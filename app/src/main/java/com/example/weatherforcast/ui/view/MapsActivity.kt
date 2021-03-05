@@ -1,10 +1,12 @@
 package com.example.weatherforcast.ui.view
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import com.example.weatherforcast.R
 import com.example.weatherforcast.SettingsActivity
 
@@ -20,10 +22,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var confirmBtn: Button
     private  var lat: Double=0.0
     private  var lon: Double=0.0
+    lateinit var prefs: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -31,32 +35,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         confirmBtn.setOnClickListener {
             if (lat==0.0 || lon==0.0) {
                 Toast.makeText(
-                    this,
-                    "please select place , ",
-                    Toast.LENGTH_SHORT
+                        this,
+                        "please select place , ",
+                        Toast.LENGTH_SHORT
                 ).show()
             } else {
-                Toast.makeText(
-                    this,
-                    ", " + lon + lat,
-                    Toast.LENGTH_SHORT
-                ).show()
                 if(intent.hasExtra("mapId")){
                     val intent: Intent = Intent(this, FavoritesActivity::class.java)
                     intent.putExtra("lat", lat)
                     intent.putExtra("lon", lon)
                     intent.putExtra("id", 1)
                     startActivity(intent)
+                    finish()
                 }
                 else{
                     val intent: Intent = Intent(this, SettingsActivity::class.java)
-                    // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    intent.putExtra("lat", lat)
-                    intent.putExtra("lon", lon)
-                    intent.putExtra("id", 1)
+                    prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                    val editor: SharedPreferences.Editor = prefs.edit()
+                    editor.putString("lat", (lat.toString()))
+                    editor.putString("lon", (lon.toString()))
+                    editor.apply()
+                    editor.commit()
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    // intent.putExtra("lat", lat)
+                    // intent.putExtra("lon", lon)
+                    //intent.putExtra("id", 1)
                     startActivity(intent)
+                    finish()
                 }
-                finish()
             }
         }
 

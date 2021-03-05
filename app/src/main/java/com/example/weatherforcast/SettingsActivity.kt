@@ -9,10 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.EditTextPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
+import androidx.preference.*
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.example.weatherforcast.ui.view.MapsActivity
 import java.util.*
@@ -20,15 +17,12 @@ import java.util.*
 
 class SettingsActivity : AppCompatActivity() {
     //private lateinit var viewModel: SettingViewModel
-    lateinit var listener: (SharedPreferences, String) -> Unit
-    lateinit var prefs: SharedPreferences
-
+    public var lat: String = "0"
+    public var lon: String = "0"
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        Log.i("ola", "createjj:")
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -36,118 +30,99 @@ class SettingsActivity : AppCompatActivity() {
                     .replace(R.id.settings, SettingsFragment())
                     .commit()
         }
-//        viewModel = ViewModelProvider(
-//                this,
-//                ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(
-//                SettingViewModel::class.java)
-
-        if (intent.hasExtra("id")) {
-            lat = intent.getDoubleExtra("lat", 0.0).toString()
-            lon = intent.getDoubleExtra("lon", 0.0).toString()
-            prefs = PreferenceManager.getDefaultSharedPreferences(this)
-            val editor: SharedPreferences.Editor = prefs.edit()
-            editor.putString("lat", (lat))
-            editor.putString("lon", (lon))
-            editor.apply()
-            editor.commit()
-            //viewModel.loadWeather(applicationContext, lat.toDouble(), lon.toDouble(), Setting.ENGLISH.Value, Setting.IMPERIAL.Value)
-            Toast.makeText(
-                    this, " " + lon + lat,
-                    Toast.LENGTH_SHORT
-            ).show()
-        }
-        listener = { sharedPreferences: SharedPreferences, key ->
-            Log.i("ola", key + "llll:")
-            if (key == "APP_LANG") {
-                //Do Something
-                Log.i("ola", "llll:")
-            }
-        }
-
-        getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(listener)
 
 
     }
 
-    class SettingsFragment : PreferenceFragmentCompat() {
+    class SettingsFragment : PreferenceFragmentCompat() , SharedPreferences.OnSharedPreferenceChangeListener{
+
+        private lateinit var sharedPreferences: SharedPreferences
+        private lateinit var prefrenceScreen: PreferenceScreen
+        private lateinit var editor: SharedPreferences.Editor
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-            bindPreferenceSummaryToValue(findPreference("CUSTOM_LOCATION"))
-            bindPreferenceSummaryToValue(findPreference("latitude"))
+            prefrenceScreen = preferenceScreen
+            sharedPreferences =  preferenceScreen.sharedPreferences
+            sharedPreferences = getDefaultSharedPreferences(context)
+            editor = sharedPreferences.edit()
+            //editor.putBoolean("isUpdated", false)
+            //editor.commit()
 
             val goToLocationSettings: Preference? = findPreference("CUSTOM_LOCATION")
             if (goToLocationSettings != null) {
                 goToLocationSettings.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                     activity?.finish()
                     val intent: Intent = Intent(context, MapsActivity::class.java)
+                    editor.putBoolean("isUpdated", true)
+                    editor.commit()
                     startActivity(intent)
                     true
                 }
             }
+
         }
-    }
+        override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+            // Figure out which preference was changed
+            editor.putBoolean("isUpdated", true)
+            editor.commit()
 
-    companion object {
-        private var lat: String = "0"
-        private var lon: String = "0"
+            val preference: Preference? = key?.let { findPreference(it) }
+            preference?.let {
+                // Updates the summary for the preference
+                Log.i("ola",""+preference+"pree")
+                if (preference is SwitchPreference) {
+                    val value = sharedPreferences!!.getBoolean(preference.key,false)
+                    Log.i("ola",""+value.toString()+"cc" +"")
+                    editor.putBoolean("isUpdated", true)
+                    editor.commit()
 
-        private fun bindPreferenceSummaryToValue(preference: Preference?) {
-            if (preference != null) {
-                preference.onPreferenceChangeListener = sBindPreferenceSummaryToValueListener
+                }
+                else if (preference is ListPreference) {
+                    if(preference.key=="UNIT_SYSTEM") {
+                        val value = sharedPreferences?.getString(preference.key, "")
+                        Log.i("ola",value+"uu")
 
-                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                        PreferenceManager
-                                .getDefaultSharedPreferences(preference.context)
-                                .getString(preference.key, ""))
+                        editor.putBoolean("isUpdated", true)
+                        editor.commit()
+                    }
+                    else {
+
+                        val value = sharedPreferences?.getString(preference.key, "")
+                        Log.i("ola",value+"ll")
+                        // activity?.let { it1 -> setLocale(it1,value) }
+
+                    }
+
+                }
+                else{
+                    if(preference.key=="CUSTOM_LOCATION"){
+                        val value = sharedPreferences?.getString(preference.key, "")
+                        Log.i("ola",value+"cc" +"")
+                    }
+                    else{}
+
+                }
             }
         }
+        /* fun setLocale(activity: Activity, languageCode: String?) {
+             val locale = Locale(languageCode)
+             Locale.setDefault(locale)
+             val resources: Resources = activity.resources
+             val config: Configuration = resources.getConfiguration()
+             config.setLocale(locale)
+             resources.updateConfiguration(config, resources.getDisplayMetrics())
+         }*/
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            preferenceScreen.sharedPreferences
+                    .registerOnSharedPreferenceChangeListener(this)
+        }
 
-        private val sBindPreferenceSummaryToValueListener = Preference.OnPreferenceChangeListener { preference, newValue ->
-            val stringValue = newValue.toString()
-            Log.i("ola", "riffffffffr:")
-            if (preference is EditTextPreference) {
-                Log.i("ola", "ltttttt:")
-                preference.text = lat
-            } else {
-                preference.summary = lat
-            }
-            true
+        override fun onDestroy() {
+            super.onDestroy()
+            preferenceScreen.sharedPreferences
+                    .unregisterOnSharedPreferenceChangeListener(this)
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        Log.i("ola", "before reg:\":")
-
-        Log.i("ola", "after reg:\":")
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.i("ola", "before unreg:")
-        Log.i("ola", "after unreg:")
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(listener)
-        Log.i("ola", "ss:")
-        // getSharedPreferences(PREFS_NAME, MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(listener)
-        //prefs.unregisterOnSharedPreferenceChangeListener(this);
-        //Context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this)
-
-    }
-
-    fun setLocale(activity: Activity, languageCode: String?) {
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-        val resources: Resources = activity.resources
-        val config: Configuration = resources.getConfiguration()
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.getDisplayMetrics())
-    }
-
 }

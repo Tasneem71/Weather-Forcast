@@ -12,8 +12,8 @@ import com.example.weatherforcast.databinding.FavItemBinding
 import java.util.*
 
 class FavoriteAdapter(var FavList: ArrayList<ApiObj>, favoritesViewModel: FavoritesViewModel, context:Context) : RecyclerView.Adapter<FavoriteAdapter.VH>() {
-    lateinit var favoritesViewModel: FavoritesViewModel
-    lateinit var context: Context
+     var favoritesViewModel: FavoritesViewModel
+     var context: Context
     init {
         this.favoritesViewModel=favoritesViewModel
         this.context=context

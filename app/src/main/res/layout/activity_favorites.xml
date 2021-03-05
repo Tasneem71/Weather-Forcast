@@ -1,21 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <RelativeLayout
+ <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:paddingHorizontal="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:subtitleTextColor="@color/white"
+        app:titleTextColor="@color/white">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_keyboard_backspace_24"/>
+    </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/manageCitis_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:textSize="30sp"
+            android:layout_marginTop="0dp"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/black"
+            android:text="@string/manageCities"/>
+
+    <TextView
+        android:id="@+id/timezone_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/manageCitis_tv"
+        android:textSize="15sp"
+        android:padding="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/text_view_style_bg"
+        android:textColor="@color/darkGray"
+
+        android:drawableStart="@drawable/ic_baseline_add_location_24"
+        android:text="@string/manageCities"/>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFavList"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/timezone_tv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/fav_item" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addBtn"
             android:layout_width="wrap_content"
@@ -24,11 +75,12 @@
             app:borderWidth="0dp"
             android:clickable="true"
             app:fabSize="normal"
-            android:src="@drawable/ic_baseline_wb_sunny_24"
+            android:src="@drawable/ic_baseline_add_24"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_margin="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             ></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-    </RelativeLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>

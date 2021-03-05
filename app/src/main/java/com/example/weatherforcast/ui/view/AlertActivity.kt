@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -32,19 +31,11 @@ class AlertActivity : AppCompatActivity() {
 
     private lateinit var viewModel: AlartViewModel
     lateinit var binding: ActivityAlertBinding
-    private lateinit var addBtn: FloatingActionButton
     lateinit var alertAdabter : AlertAdabter
     lateinit var bindingDialog: NewAlarmBinding
     lateinit var dialog: Dialog
-    lateinit var datePickerDialog: DatePickerDialog
-    lateinit var timePickerDialogfrom: TimePickerDialog
-    lateinit var timePickerDialogto: TimePickerDialog
     var calStart = Calendar.getInstance()
     var calEnd = Calendar.getInstance()
-    companion object{
-
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -191,17 +182,17 @@ class AlertActivity : AppCompatActivity() {
 
 
     private fun getEvent(): String {
-        var repetation = ""
+        var event = ""
         var arr = this.resources.getStringArray(R.array.event_options)
         when (bindingDialog.eventSpinner.getSelectedItemPosition()) {
-            0 -> repetation = arr[0]
-            1 -> repetation = arr[1]
-            2 -> repetation = arr[2]
-            3 -> repetation = arr[3]
-            2 -> repetation = arr[4]
-            3 -> repetation = arr[5]
+            0 -> event = arr[0]
+            1 -> event = arr[1]
+            2 -> event = arr[2]
+            3 -> event = arr[3]
+            4 -> event = arr[4]
+            5 -> event = arr[5]
         }
-        return repetation
+        return event
     }
 
     private fun initUI() {

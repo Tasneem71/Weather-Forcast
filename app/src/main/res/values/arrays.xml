@@ -13,8 +13,8 @@
     </string-array>
 
     <string-array name= "languageSystemValues">
-        <item>ENGLISH</item>
-        <item>ARABIC</item>
+        <item>en</item>
+        <item>ar</item>
     </string-array>
 
     <string-array name="languageSystemEntries">

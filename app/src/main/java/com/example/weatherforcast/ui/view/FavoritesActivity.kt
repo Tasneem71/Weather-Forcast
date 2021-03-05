@@ -2,15 +2,19 @@ package com.example.weatherforcast.ui.view
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.weatherforcast.ui.viewModel.FavoritesViewModel
 import com.example.weatherforcast.R
 import com.example.weatherforcast.data.entity.ApiObj
@@ -18,6 +22,9 @@ import com.example.weatherforcast.data.retro.SettingsEnum
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.example.weatherforcast.databinding.ActivityFavoritesBinding
 import com.example.weatherforcast.databinding.FavDailogBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,6 +38,7 @@ class FavoritesActivity : AppCompatActivity() {
     var dailyListAdapter = DayAdapter(arrayListOf(),this)
     var hourlyListAdapter = HourAbapter(arrayListOf())
     lateinit var dialog: Dialog
+    lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,20 +48,30 @@ class FavoritesActivity : AppCompatActivity() {
         favoriteAdapter=FavoriteAdapter(arrayListOf(),viewModel,applicationContext)
         binding = ActivityFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         if(intent.hasExtra("id")) {
             var lat = intent.getDoubleExtra("lat", 0.0)
             var lon = intent.getDoubleExtra("lon", 0.0)
-            observeViewModel(viewModel, lat, lon,SettingsEnum.ENGLISH.Value,SettingsEnum.IMPERIAL.Value)
-            Toast.makeText(this,  " " + lon+lat,Toast.LENGTH_SHORT).show()
+            var unit=prefs.getString("UNIT_SYSTEM", SettingsEnum.IMPERIAL.Value).toString()
+            var lang=prefs.getString("APP_LANG", SettingsEnum.ENGLISH.Value).toString()
+            observeViewModel(viewModel, lat, lon, lang,unit)
+            Toast.makeText(
+                    this, " " + lon + lat,
+                    Toast.LENGTH_SHORT
+            ).show()
         }
         else {
             getWeatherData(viewModel)
         }
 
+        val timeZone=prefs.getString("timezone", "your location").toString()
+        binding.timezoneTv.text=timeZone
+
         binding.addBtn.setOnClickListener{
             val intent: Intent = Intent(this,
                 MapsActivity::class.java)
+            intent.putExtra("mapId",2)
             startActivity(intent)
             finish()
         }
@@ -96,6 +114,8 @@ class FavoritesActivity : AppCompatActivity() {
         dialog.setCancelable(false)
         dialog.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         bindingDialog = FavDailogBinding.inflate(layoutInflater)
+        bindingDialog.dialogContent.addFav.visibility=View.INVISIBLE
+        bindingDialog.dialogContent.menu.visibility=View.INVISIBLE
         dialog.setContentView(bindingDialog.root)
         initDialog()
         updateDialog(weatherObj)
@@ -109,18 +129,24 @@ class FavoritesActivity : AppCompatActivity() {
             item.apply {
                 bindingDialog.dialogContent.temp.text=current.temp.toInt().toString()+"°"
                 bindingDialog.dialogContent.describtion.text= current.weather.get(0).description.toString()
-                bindingDialog.dialogContent.toolbarLayout.title=timezone
+                bindingDialog.dialogContent.titletv.text=timezone
                 bindingDialog.dialogContent.iContent.humidityTv.text=current.humidity.toString()
                 bindingDialog.dialogContent.iContent.wendTv.text=current.wind_speed.toString()
                 bindingDialog.dialogContent.iContent.pressureTv.text=current.pressure.toString()
                 bindingDialog.dialogContent.iContent.cloudTv.text=current.clouds.toString()
                 bindingDialog.dialogContent.iContent.Date.text= dateFormat(current.dt)
                 bindingDialog.dialogContent.iContent.Time.text= timeFormat(current.dt)
+                CoroutineScope(Dispatchers.Main).launch{
+                    Glide.with(bindingDialog.dialogContent.currentIcon).
+                    load(iconLinkgetter(current.weather.get(0).icon)).
+                    placeholder(R.drawable.ic_baseline_wb_sunny_24).into(bindingDialog.dialogContent.currentIcon)
+                }
                 dailyListAdapter.updateDays(daily)
                 hourlyListAdapter.updateHours(hourly)
             }
         }
     }
+    fun iconLinkgetter(iconName:String):String="https://openweathermap.org/img/wn/"+iconName+"@2x.png"
     private fun timeFormat(millisSeconds: Int): String {
         val calendar = Calendar.getInstance()
         calendar.setTimeInMillis((millisSeconds * 1000).toLong())
@@ -144,7 +170,7 @@ class FavoritesActivity : AppCompatActivity() {
 
         }
         bindingDialog.dialogContent.iContent.dayList.apply {
-            layoutManager = LinearLayoutManager(applicationContext)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = dailyListAdapter
         }
     }

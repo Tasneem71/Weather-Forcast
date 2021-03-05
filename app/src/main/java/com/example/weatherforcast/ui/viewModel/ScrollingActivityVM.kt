@@ -14,29 +14,24 @@ class ScrollingActivityVM (application: Application) : AndroidViewModel(applicat
 
     val apiObj= MutableLiveData<ApiObj>();
     var apiRepository:ApiRepository
-    lateinit var localDataSource : LocalDataSource
 
     init{
         apiRepository = ApiRepository(application)
-        localDataSource = LocalDataSource(application)
-    }
-
-    public fun loadWeather(context: Context, lat:Double, lon:Double,lang:String,unit:String) : LiveData<List<ApiObj>> {
-        return apiRepository.fetchWeatherData(context,lat, lon,lang,unit)
-    }
-
-    public fun getApiObj() : LiveData<ApiObj> {
-        return apiObj;
     }
 
     public fun getApiObjFromRoom(timeZone:String): ApiObj{
-        return localDataSource.getApiObj(timeZone)
+        return apiRepository.getApiObjFromRoom(timeZone)
     }
 
 
     public fun loadWeatherObj(context: Context,lat:Double,lon:Double,lang:String,unit:String) : LiveData<ApiObj>{
         apiRepository.fetchWeatherObj(context,lat,lon,lang,unit)
         return apiRepository.weatherObj
+    }
+
+    public fun updateAllData(context: Context,lang: String, unit: String){
+        apiRepository.UpdateWeatherData(lang,unit,context)
+
     }
 }
 

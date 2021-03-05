@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/colorAccent">
+    android:orientation="horizontal">
 
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="85dp"
         android:layout_height="wrap_content"
         android:weightSum="6"
         android:layout_marginStart="2dp"
@@ -55,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="cloudy"
+            android:text="overcast clouds"
             android:layout_marginTop="10dp"
             android:textColor="@color/white"
             android:textSize="11sp"

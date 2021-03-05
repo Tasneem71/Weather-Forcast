@@ -13,23 +13,15 @@
     app:cardElevation="8dp"
     app:cardBackgroundColor="@color/colorAccent"
     app:backgroundTint="@null">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:id="@+id/fav_item"
-        android:orientation="vertical">
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/white" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fav_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="6">
+            android:layout_margin="15dp">
             <TextView
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/timezoneTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,35 +35,43 @@
 
 
             <TextView
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timezoneTxt"
                 android:id="@+id/favDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="cloudy"
                 android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
                 android:gravity="end"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textColor="@color/lightGreen"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/locImg"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:src="@mipmap/ic_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
             <TextView
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/favTemb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="9°"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="35dp"
                 android:gravity="end"
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="40sp" />
 
-        </LinearLayout>
-        <ImageView
-            android:id="@+id/locImg"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/ic_baseline_wb_sunny_24"
-            android:layout_weight="1" />
-    </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.cardview.widget.CardView>

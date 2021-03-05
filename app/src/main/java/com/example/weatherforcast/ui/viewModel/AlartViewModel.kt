@@ -15,10 +15,8 @@ import kotlinx.coroutines.launch
 
 class AlartViewModel (application: Application) : AndroidViewModel(application) {
 
-    lateinit var localDataSource : LocalDataSource
+    var localDataSource : LocalDataSource
     val navegate = MutableLiveData<AlarmObj>()
-    val displayListener = MutableLiveData<AlarmObj>()
-
     init{
         localDataSource = LocalDataSource(application)
     }
