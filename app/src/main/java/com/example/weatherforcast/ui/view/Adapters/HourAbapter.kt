@@ -1,11 +1,10 @@
-package com.example.weatherforcast.ui.view
+package com.example.weatherforcast.ui.view.Adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherforcast.R
-import com.example.weatherforcast.data.entity.Daily
 import com.example.weatherforcast.data.entity.Hourly
 import com.example.weatherforcast.databinding.HourItemBinding
 import java.text.SimpleDateFormat
@@ -25,7 +24,9 @@ class HourAbapter(var items: ArrayList<Hourly>) : RecyclerView.Adapter<HourAbapt
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val viewBinding =
             HourItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VH(viewBinding)
+        return VH(
+            viewBinding
+        )
     }
 
     private fun timeFormat(millisSeconds:Int ): String {

@@ -1,8 +1,6 @@
-package com.example.weatherforcast.ui.view
+package com.example.weatherforcast.ui.view.Adapters
 
 import android.content.Context
-import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +29,9 @@ class FavoriteAdapter(var FavList: ArrayList<ApiObj>, favoritesViewModel: Favori
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val viewBinding =
             FavItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VH(viewBinding)
+        return VH(
+            viewBinding
+        )
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {

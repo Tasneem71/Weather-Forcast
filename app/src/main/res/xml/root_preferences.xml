@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory android:title="@string/loc_title">
+    <PreferenceCategory android:title="@string/loc_title"
+        android:icon="@drawable/pin">
         <SwitchPreference
             android:defaultValue="true"
             android:disableDependentsState="true"
@@ -25,7 +26,8 @@
             android:summary="%s">
         </EditTextPreference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/units_title">
+    <PreferenceCategory android:title="@string/units_title"
+        android:icon="@drawable/filter">
         <ListPreference
             android:defaultValue="METRIC"
             android:entries="@array/unitSystemEntries"
@@ -34,7 +36,8 @@
             android:title="@string/unit_key"
             android:summary="%s"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/language_title">
+    <PreferenceCategory android:title="@string/language_title"
+        android:icon="@drawable/translation">
         <ListPreference
             android:defaultValue="ENGLISH"
             android:entries="@array/languageSystemEntries"

@@ -1,18 +1,13 @@
-package com.example.weatherforcast
+package com.example.weatherforcast.ui.view.Activities
 
-import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
-import com.example.weatherforcast.ui.view.MapsActivity
-import java.util.*
+import com.example.weatherforcast.R
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -27,7 +22,10 @@ class SettingsActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.settings, SettingsFragment())
+                    .replace(
+                        R.id.settings,
+                        SettingsFragment()
+                    )
                     .commit()
         }
 

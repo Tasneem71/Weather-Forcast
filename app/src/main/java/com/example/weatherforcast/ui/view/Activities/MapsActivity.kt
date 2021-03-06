@@ -1,4 +1,4 @@
-package com.example.weatherforcast.ui.view
+package com.example.weatherforcast.ui.view.Activities
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.example.weatherforcast.R
-import com.example.weatherforcast.SettingsActivity
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap

@@ -1,4 +1,4 @@
-package com.example.weatherforcast.ui.view
+package com.example.weatherforcast.ui.view.Activities
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -15,11 +15,8 @@ import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
@@ -32,21 +29,17 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Glide.with
 import com.example.weatherforcast.R
-import com.example.weatherforcast.SettingsActivity
-import com.example.weatherforcast.WorkerApi
+import com.example.weatherforcast.utils.WorkerApi
 import com.example.weatherforcast.data.entity.Alerts
 import com.example.weatherforcast.data.entity.ApiObj
 import com.example.weatherforcast.data.retro.SettingsEnum
 import com.example.weatherforcast.databinding.ActivityScrollingBinding
+import com.example.weatherforcast.ui.view.Adapters.DayAdapter
+import com.example.weatherforcast.ui.view.Adapters.HourAbapter
 import com.example.weatherforcast.ui.viewModel.ScrollingActivityVM
-import com.example.weatherforcast.utils.GlideApp
-import com.example.weatherforcast.utils.GlideAppApp
 import com.example.weatherforcast.utils.NotificationUtils
 import com.google.android.gms.location.*
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,8 +54,13 @@ class ScrollingActivity : AppCompatActivity() {
     var yourLocationLon:Double=0.0
     lateinit var binding:ActivityScrollingBinding
     private lateinit var scrollingActivityViewModal: ScrollingActivityVM
-    var dailyListAdapter = DayAdapter(arrayListOf(),this)
-    var hourlyListAdapter = HourAbapter(arrayListOf())
+    var dailyListAdapter =
+        DayAdapter(
+            arrayListOf(),
+            this
+        )
+    var hourlyListAdapter =
+        HourAbapter(arrayListOf())
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
     lateinit var prefs: SharedPreferences
@@ -179,7 +177,7 @@ class ScrollingActivity : AppCompatActivity() {
         var month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         var day=calendar.get(Calendar.DAY_OF_MONTH).toString()
         var year=calendar.get(Calendar.YEAR).toString()
-        return day+"/"+month +"/"+year
+        return day+"/"+month// +"/"+year
 
     }
 
@@ -265,7 +263,8 @@ class ScrollingActivity : AppCompatActivity() {
 //                    true
 //                }
                 R.id.action_Alerts -> {
-                    val intent: Intent = Intent(applicationContext,AlertActivity::class.java)
+                    val intent: Intent = Intent(applicationContext,
+                        AlertActivity::class.java)
                     startActivity(intent)
                     true}
                 else -> super.onOptionsItemSelected(item)

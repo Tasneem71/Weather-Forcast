@@ -1,4 +1,4 @@
-package com.example.weatherforcast.ui.view
+package com.example.weatherforcast.ui.view.Activities
 
 import android.app.*
 import android.content.Context
@@ -16,11 +16,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weatherforcast.AlarmReceiver
+import com.example.weatherforcast.utils.AlarmReceiver
 import com.example.weatherforcast.R
 import com.example.weatherforcast.data.entity.AlarmObj
 import com.example.weatherforcast.databinding.ActivityAlertBinding
 import com.example.weatherforcast.databinding.NewAlarmBinding
+import com.example.weatherforcast.ui.view.Adapters.AlertAdabter
 import com.example.weatherforcast.ui.viewModel.AlartViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -174,7 +175,6 @@ class AlertActivity : AppCompatActivity() {
             alertAdabter.updateAlarms(it)
         }
     }
-
 
     private fun showDialog(alarmObj: AlarmObj){
         dialog = Dialog(this)

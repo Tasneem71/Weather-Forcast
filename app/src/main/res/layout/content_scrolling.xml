@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.view.ScrollingActivity"
+    tools:context=".ui.view.Activities.ScrollingActivity"
     tools:showIn="@layout/activity_scrolling">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,27 +17,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:weightSum="5">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/date_img"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/calendar"
-                android:layout_gravity="center"/>
+                android:src="@drawable/sun"
+                android:layout_gravity="center"
+                android:layout_weight=".4"/>
+            <TextView
+                android:id="@+id/Date_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/date_img"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="10dp"
+                android:text="@string/date"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:layout_weight="3"/>
             <TextView
                 android:id="@+id/Date"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@+id/date_img"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="10dp"
                 tools:text="date"
-                android:textSize="25dp"
-                android:textColor="@color/white"/>
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:layout_weight="1.5"/>
 
         </LinearLayout>
 
@@ -48,25 +62,40 @@
             app:layout_constraintTop_toBottomOf="@+id/date_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="30dp"
+            android:weightSum="5">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/time_img"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/date_img"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/time"/>
+                android:src="@drawable/sun"
+                android:layout_gravity="center"
+                android:layout_weight=".4"/>
+            <TextView
+                android:id="@+id/Time_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/time_img"            app:layout_constraintTop_toBottomOf="@+id/Date"
+                android:layout_marginStart="10dp"
+                android:text="@string/time"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_weight="3"/>
+
             <TextView
                 android:id="@+id/Time"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@+id/time_img"            app:layout_constraintTop_toBottomOf="@+id/Date"
                 android:layout_marginStart="10dp"
                 tools:text="date"
                 android:textColor="@color/white"
-                android:textSize="25dp" />
+                android:textSize="20dp"
+                android:layout_weight="1.5"/>
 
         </LinearLayout>
 
@@ -77,54 +106,72 @@
             app:layout_constraintTop_toBottomOf="@+id/time_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="30dp"
+            android:weightSum="5">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/feels_img"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/date_img"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/feelslike"/>
+                android:src="@drawable/feelslike"
+                android:layout_weight=".4"/>
+            <TextView
+                android:id="@+id/feels_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/time_img"            app:layout_constraintTop_toBottomOf="@+id/Date"
+                android:layout_marginStart="10dp"
+                android:text="@string/feels_like"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_weight="3"/>
+
             <TextView
                 android:id="@+id/feels"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@+id/time_img"            app:layout_constraintTop_toBottomOf="@+id/Date"
                 android:layout_marginStart="10dp"
                 tools:text="date"
                 android:textColor="@color/white"
-                android:textSize="25dp" />
+                android:textSize="20dp"
+                android:layout_weight="1.5"/>
 
         </LinearLayout>
 
 
+        <TextView
+            android:id="@+id/seven"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/feels_linear"
+            android:textSize="15sp"
+            android:layout_marginStart="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/sevenDayes"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 
 
         <LinearLayout
             android:id="@+id/day_List_holder"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/feels_linear"
+            app:layout_constraintTop_toBottomOf="@+id/seven"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/details_shape_bg"
             android:orientation="vertical">
-            <TextView
-                android:textSize="15sp"
-                android:layout_marginStart="25dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
-                android:text="@string/sevenDayes"
-                android:textColor="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 app:layout_constraintStart_toStartOf="parent"
@@ -379,8 +426,7 @@
         <ImageView
             app:layout_constraintTop_toBottomOf="@id/detailsCard"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/colorAccent"/>
+            android:layout_height="100dp"/>
 
 
 

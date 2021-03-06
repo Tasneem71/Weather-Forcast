@@ -1,4 +1,4 @@
-package com.example.weatherforcast.ui.view
+package com.example.weatherforcast.ui.view.Activities
 
 import android.app.Dialog
 import android.content.Intent
@@ -22,6 +22,9 @@ import com.example.weatherforcast.data.retro.SettingsEnum
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.example.weatherforcast.databinding.ActivityFavoritesBinding
 import com.example.weatherforcast.databinding.FavDailogBinding
+import com.example.weatherforcast.ui.view.Adapters.DayAdapter
+import com.example.weatherforcast.ui.view.Adapters.FavoriteAdapter
+import com.example.weatherforcast.ui.view.Adapters.HourAbapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,8 +38,13 @@ class FavoritesActivity : AppCompatActivity() {
     private lateinit var addBtn: FloatingActionButton
     lateinit var favoriteAdapter : FavoriteAdapter
     lateinit var bindingDialog: FavDailogBinding
-    var dailyListAdapter = DayAdapter(arrayListOf(),this)
-    var hourlyListAdapter = HourAbapter(arrayListOf())
+    var dailyListAdapter =
+        DayAdapter(
+            arrayListOf(),
+            this
+        )
+    var hourlyListAdapter =
+        HourAbapter(arrayListOf())
     lateinit var dialog: Dialog
     lateinit var prefs: SharedPreferences
 
@@ -45,7 +53,12 @@ class FavoritesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_favorites)
         viewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(
             FavoritesViewModel::class.java)
-        favoriteAdapter=FavoriteAdapter(arrayListOf(),viewModel,applicationContext)
+        favoriteAdapter=
+            FavoriteAdapter(
+                arrayListOf(),
+                viewModel,
+                applicationContext
+            )
         binding = ActivityFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -160,7 +173,7 @@ class FavoritesActivity : AppCompatActivity() {
         var month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         var day=calendar.get(Calendar.DAY_OF_MONTH).toString()
         var year=calendar.get(Calendar.YEAR).toString()
-        return day+month +year
+        return day+month// +year
 
     }
     fun initDialog(){

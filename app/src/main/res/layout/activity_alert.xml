@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.AlertActivity"
+    tools:context=".ui.view.Activities.AlertActivity"
     android:background="@drawable/background_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout

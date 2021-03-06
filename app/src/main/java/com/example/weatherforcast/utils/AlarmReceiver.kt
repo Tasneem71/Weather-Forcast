@@ -1,11 +1,10 @@
-package com.example.weatherforcast
+package com.example.weatherforcast.utils
 
 import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -13,7 +12,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FLAG_INSISTENT
 import androidx.preference.PreferenceManager
 import com.example.weatherforcast.data.roomdb.LocalDataSource
-import com.example.weatherforcast.utils.NotificationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -64,5 +64,8 @@
     <string name="Alarms">Alarms</string>
     <string name="addAlarm">+  Add</string>
     <string name="save">+  Save</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="feels_like">Feels like</string>
 
 </resources>

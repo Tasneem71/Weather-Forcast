@@ -1,18 +1,15 @@
-package com.example.weatherforcast.ui.view
+package com.example.weatherforcast.ui.view.Adapters
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import com.example.weatherforcast.data.entity.Daily
 import com.example.weatherforcast.databinding.DayItemBinding
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherforcast.R
-import com.example.weatherforcast.SettingsActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -28,9 +25,11 @@ class DayAdapter(var DailyList: ArrayList<Daily>,context: Context) :
         this.context=context
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int) :DailyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int) : DailyViewHolder {
         val viewBinding = DayItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DailyViewHolder(viewBinding)
+        return DailyViewHolder(
+            viewBinding
+        )
     }
 
     override fun getItemCount() = DailyList.size

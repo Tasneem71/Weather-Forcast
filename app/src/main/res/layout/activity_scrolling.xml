@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.view.ScrollingActivity"
+    tools:context=".ui.view.Activities.ScrollingActivity"
     android:background="@drawable/background_bg">
      <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -60,6 +60,32 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+<!--    <pl.droidsonroids.gif.GifImageView-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/giphy"-->
+<!--        android:scaleType="center"-->
+<!--        />-->
+
+<!--    <ImageView-->
+<!--        android:src="@drawable/cloudback1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:scaleType="centerCrop"/>-->
+
+    <ImageView
+        android:src="@mipmap/cloudback5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"/>
+
+
     <androidx.core.widget.NestedScrollView
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".ui.view.ScrollingActivity"
+        tools:context=".ui.view.Activities.ScrollingActivity"
         tools:showIn="@layout/activity_scrolling">
 
 
@@ -80,6 +106,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
         android:layout_marginTop="140dp">
+
+
 
         <LinearLayout
             android:id="@+id/bubble"
@@ -140,7 +168,7 @@
             app:layout_constraintTop_toBottomOf="@+id/bubble"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="190dp">
+            android:layout_marginTop="140dp">
             <include
                 android:id="@+id/iContent"
                 layout="@layout/content_scrolling"/>

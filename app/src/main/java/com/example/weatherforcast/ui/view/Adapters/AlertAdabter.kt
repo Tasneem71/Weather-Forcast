@@ -1,4 +1,4 @@
-package com.example.weatherforcast.ui.view
+package com.example.weatherforcast.ui.view.Adapters
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -7,7 +7,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherforcast.AlarmReceiver
+import com.example.weatherforcast.utils.AlarmReceiver
 import com.example.weatherforcast.data.entity.AlarmObj
 import com.example.weatherforcast.databinding.AlarmItemBinding
 import com.example.weatherforcast.ui.viewModel.AlartViewModel
@@ -33,7 +33,9 @@ class AlertAdabter (var alarmList: ArrayList<AlarmObj>,alartViewModel: AlartView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val viewBinding =
                 AlarmItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VH(viewBinding)
+        return VH(
+            viewBinding
+        )
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
