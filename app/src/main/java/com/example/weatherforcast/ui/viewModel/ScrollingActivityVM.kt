@@ -9,6 +9,8 @@ import com.example.weatherforcast.data.ApiRepository
 import com.example.weatherforcast.data.entity.ApiObj
 import com.example.weatherforcast.data.retro.WeatherServes
 import com.example.weatherforcast.data.roomdb.LocalDataSource
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ScrollingActivityVM (application: Application) : AndroidViewModel(application) {
 
@@ -33,6 +35,25 @@ class ScrollingActivityVM (application: Application) : AndroidViewModel(applicat
         apiRepository.UpdateWeatherData(lang,unit,context)
 
     }
+
+ fun dateFormat(milliSeconds: Int):String{
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.setTimeInMillis(milliSeconds.toLong() * 1000)
+        var month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        var day=calendar.get(Calendar.DAY_OF_MONTH).toString()
+        var year=calendar.get(Calendar.YEAR).toString()
+        return day+"/"+month// +"/"+year
+
+    }
+
+  fun timeFormat(millisSeconds:Int ): String {
+        val calendar = Calendar.getInstance()
+        calendar.setTimeInMillis((millisSeconds * 1000).toLong())
+        val format = SimpleDateFormat("hh:00 aaa")
+        return format.format(calendar.time)
+    }
+
 }
 
 

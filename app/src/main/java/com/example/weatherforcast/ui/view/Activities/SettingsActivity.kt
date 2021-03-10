@@ -10,8 +10,7 @@ import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.example.weatherforcast.R
 
 
-class SettingsActivity : AppCompatActivity() {
-    //private lateinit var viewModel: SettingViewModel
+class SettingsActivity : localizeActivity() {
     public var lat: String = "0"
     public var lon: String = "0"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +70,7 @@ class SettingsActivity : AppCompatActivity() {
                 Log.i("ola",""+preference+"pree")
                 if (preference is SwitchPreference) {
                     val value = sharedPreferences!!.getBoolean(preference.key,false)
-                    Log.i("ola",""+value.toString()+"cc" +"")
+                    Log.i("setting",""+value.toString()+"cc" +"")
                     editor.putBoolean("isUpdated", true)
                     editor.commit()
 
@@ -79,7 +78,7 @@ class SettingsActivity : AppCompatActivity() {
                 else if (preference is ListPreference) {
                     if(preference.key=="UNIT_SYSTEM") {
                         val value = sharedPreferences?.getString(preference.key, "")
-                        Log.i("ola",value+"uu")
+                        Log.i("setting",value+"uu")
 
                         editor.putBoolean("isUpdated", true)
                         editor.commit()
@@ -87,7 +86,7 @@ class SettingsActivity : AppCompatActivity() {
                     else {
 
                         val value = sharedPreferences?.getString(preference.key, "")
-                        Log.i("ola",value+"ll")
+                        Log.i("setting",value+"ll")
                         // activity?.let { it1 -> setLocale(it1,value) }
 
                     }
@@ -96,21 +95,14 @@ class SettingsActivity : AppCompatActivity() {
                 else{
                     if(preference.key=="CUSTOM_LOCATION"){
                         val value = sharedPreferences?.getString(preference.key, "")
-                        Log.i("ola",value+"cc" +"")
+                        Log.i("setting",value+"cc" +"")
                     }
                     else{}
 
                 }
             }
         }
-        /* fun setLocale(activity: Activity, languageCode: String?) {
-             val locale = Locale(languageCode)
-             Locale.setDefault(locale)
-             val resources: Resources = activity.resources
-             val config: Configuration = resources.getConfiguration()
-             config.setLocale(locale)
-             resources.updateConfiguration(config, resources.getDisplayMetrics())
-         }*/
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             preferenceScreen.sharedPreferences

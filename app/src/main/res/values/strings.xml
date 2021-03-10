@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">WeatherForcast</string>
+    <string name="app_name">Weather Detective</string>
     <string name="action_settings">Settings</string>
     <string name="action_Alerts">Alerts</string>
     <string name="country">Country</string>
     <string name="Details">Details</string>
-    <string name="wend">Wend</string>
+    <string name="wend">Wind</string>
     <string name="cloud">Cloud</string>
     <string name="Humidity">Humidity</string>
     <string name="Pressure">Pressure</string>
@@ -21,15 +21,15 @@
     <string name="alarmSound">Alarm</string>
     <string name="soundType">Sound Type</string>
 
-    <string name="title_activity_settings">SettingsActivity</string>
-    <string name="messages_header">Messages</string>
+    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
+    <string name="messages_header" translatable="false">Messages</string>
 
     <!-- Units Preferences -->
     <string name="units_title">Units</string>
     <string name="attchement_unit">UNIT_SYSTEM</string>
-    <string name="unit_key">Unit system</string>
-    <string name="unit_metric_summary"> Temb in Celsius and wind speed in meter/sec</string>
-    <string name="unit_imperial_summary"> Temb in Fahrenheit and wind speed in miles/hour</string>
+    <string name="unit_key" translatable="false">Unit system</string>
+    <string name="unit_metric_summary" translatable="false"> Temb in Celsius and wind speed in meter/sec</string>
+    <string name="unit_imperial_summary" translatable="false"> Temb in Fahrenheit and wind speed in miles/hour</string>
     <!--metric  Temb in Celsius and wind speed in meter/sec
     imperial in Fahrenheit and wind speed in miles/hour,-->
     <!-- Location Preferences -->
@@ -40,26 +40,17 @@
     <string name="attachment2_summary">The location for which the weather is displayed</string>
     <!--language Preferences -->
     <string name="language_title">language</string>
-    <string name="attchement_language">APP_LANG</string>
+    <string name="attchement_language" translatable="false">APP_LANG</string>
     <string name="attchement2_language">App language</string>
-    <string name="latitude_key">latitude</string>
-    <string-array name="event_options">
-        <item>Rain</item>
-        <item>snow</item>
-        <item>fog</item>
-        <item>thunderstorm</item>
-        <item>cloud</item>
-        <item>wend</item>
+    <string name="latitude_key" translatable="false">latitude</string>
+    <string name="Saturday" translatable="false">Saturday</string>
 
-    </string-array>
-
-    <string name="Saturday">Saturday</string>
-    <string name="Sunday">Sunday</string>
-    <string name="Monday">Monday</string>
-    <string name="Tuesday">Tuesday</string>
-    <string name="Wednesday">Wednesday</string>
-    <string name="Friday">Friday</string>
-    <string name="Thursday">Thursday</string>
+    <string name="Sunday" translatable="false">Sunday</string>
+    <string name="Monday" translatable="false">Monday</string>
+    <string name="Tuesday" translatable="false">Tuesday</string>
+    <string name="Wednesday" translatable="false">Wednesday</string>
+    <string name="Friday" translatable="false">Friday</string>
+    <string name="Thursday" translatable="false">Thursday</string>
     <string name="manageCities">Manage Cities:</string>
     <string name="Alarms">Alarms</string>
     <string name="addAlarm">+  Add</string>
@@ -67,5 +58,22 @@
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="feels_like">Feels like</string>
+    <string name="manageTitle">Mange cities</string>
+    <string name="manageDescribe">choose the cities you want to keep track with. View all their info just with a click.</string>
+    <string name="NeverTitle">Never be surprised</string>
+    <string name="neverDescribe">WD provides you with 7-days forecast and an hourly forecast for the current day it also notifies you in case of emergencies.</string>
+    <string name="allwaysTitle">Always be prepared</string>
+    <string name="alwaysDescribe">set alarms that are associated with weather events to get notified about weather conditions.</string>
+
+
+    <string-array name="event_options">
+        <item>Rain</item>
+        <item>snow</item>
+        <item>fog</item>
+        <item>thunderstorm</item>
+        <item>cloud</item>
+        <item>wind</item>
+
+    </string-array>
 
 </resources>

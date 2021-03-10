@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FavoritesActivity : AppCompatActivity() {
+class FavoritesActivity : localizeActivity() {
 
     private lateinit var viewModel: FavoritesViewModel
     lateinit var binding: ActivityFavoritesBinding
@@ -53,12 +53,7 @@ class FavoritesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_favorites)
         viewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(
             FavoritesViewModel::class.java)
-        favoriteAdapter=
-            FavoriteAdapter(
-                arrayListOf(),
-                viewModel,
-                applicationContext
-            )
+        favoriteAdapter=FavoriteAdapter(arrayListOf(),viewModel,applicationContext)
         binding = ActivityFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -69,10 +64,7 @@ class FavoritesActivity : AppCompatActivity() {
             var unit=prefs.getString("UNIT_SYSTEM", SettingsEnum.IMPERIAL.Value).toString()
             var lang=prefs.getString("APP_LANG", SettingsEnum.ENGLISH.Value).toString()
             observeViewModel(viewModel, lat, lon, lang,unit)
-            Toast.makeText(
-                    this, " " + lon + lat,
-                    Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(this, " " + lon + lat,Toast.LENGTH_SHORT).show()
         }
         else {
             getWeatherData(viewModel)
@@ -88,6 +80,7 @@ class FavoritesActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
         initUI()
         viewModel.getNavigate().observe(this, Observer<String> { timeZone ->
             viewModel.deleteApiObj(timeZone)
@@ -147,8 +140,8 @@ class FavoritesActivity : AppCompatActivity() {
                 bindingDialog.dialogContent.iContent.wendTv.text=current.wind_speed.toString()
                 bindingDialog.dialogContent.iContent.pressureTv.text=current.pressure.toString()
                 bindingDialog.dialogContent.iContent.cloudTv.text=current.clouds.toString()
-                bindingDialog.dialogContent.iContent.Date.text= dateFormat(current.dt)
-                bindingDialog.dialogContent.iContent.Time.text= timeFormat(current.dt)
+                bindingDialog.dialogContent.iContent.Date.text= viewModel.dateFormat(current.dt)
+                bindingDialog.dialogContent.iContent.Time.text= viewModel.timeFormat(current.dt)
                 CoroutineScope(Dispatchers.Main).launch{
                     Glide.with(bindingDialog.dialogContent.currentIcon).
                     load(iconLinkgetter(current.weather.get(0).icon)).
@@ -160,22 +153,7 @@ class FavoritesActivity : AppCompatActivity() {
         }
     }
     fun iconLinkgetter(iconName:String):String="https://openweathermap.org/img/wn/"+iconName+"@2x.png"
-    private fun timeFormat(millisSeconds: Int): String {
-        val calendar = Calendar.getInstance()
-        calendar.setTimeInMillis((millisSeconds * 1000).toLong())
-        val format = SimpleDateFormat("hh:00 aaa")
-        return format.format(calendar.time)
-    }
-    private fun dateFormat(milliSeconds: Int):String{
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.setTimeInMillis(milliSeconds.toLong() * 1000)
-        var month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-        var day=calendar.get(Calendar.DAY_OF_MONTH).toString()
-        var year=calendar.get(Calendar.YEAR).toString()
-        return day+month// +year
 
-    }
     fun initDialog(){
         bindingDialog.dialogContent.iContent.hourList.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

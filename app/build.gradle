@@ -89,10 +89,14 @@ dependencies {
 
     // Kotlin + coroutines
     implementation "androidx.work:work-runtime-ktx:$work_version"
-
+    //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
-
+    //gif imageView
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
+
+    //welcome screens
+    implementation 'com.stephentuso:welcome:1.4.1'
+
 
 
 }

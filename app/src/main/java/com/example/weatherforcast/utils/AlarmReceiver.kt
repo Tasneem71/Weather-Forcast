@@ -49,6 +49,8 @@ class AlarmReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
                 val localDataSource = LocalDataSource(context.applicationContext as Application)
                 val apiObj=localDataSource.getApiObj(timeZone)
+                Log.i("alarm",""+event)
+                Log.i("alarm",""+apiObj.current.weather.get(0).description)
                 if (apiObj.current.weather.get(0).description.contains(event + "", ignoreCase = true)) {
                     notifyUser(context,event+"",apiObj.current.weather.get(0).description,id,sound)
                 }

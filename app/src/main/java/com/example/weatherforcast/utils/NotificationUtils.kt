@@ -58,7 +58,7 @@ class NotificationUtils(base: Context?) : ContextWrapper(base) {
         if (sound){
             return NotificationCompat.Builder(
                     getApplicationContext(),ANDROID_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_baseline_wb_sunny_24)
+                    .setSmallIcon(R.drawable.logo1)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setContentTitle(title)
                     .setContentText(body)
@@ -68,7 +68,7 @@ class NotificationUtils(base: Context?) : ContextWrapper(base) {
         }else{
         return NotificationCompat.Builder(
             getApplicationContext(),ANDROID_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_baseline_wb_sunny_24)
+            .setSmallIcon(R.drawable.logo1)
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
             .setContentTitle(title)
             .setContentText(body)

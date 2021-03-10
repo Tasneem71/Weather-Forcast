@@ -10,6 +10,7 @@ import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -30,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class AlertActivity : AppCompatActivity() {
+class AlertActivity : localizeActivity() {
 
     private lateinit var viewModel: AlartViewModel
     lateinit var binding: ActivityAlertBinding
@@ -49,6 +50,7 @@ class AlertActivity : AppCompatActivity() {
         alertAdabter= AlertAdabter(arrayListOf(),viewModel,applicationContext)
         binding = ActivityAlertBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        var cal=Calendar.getInstance()
         alarmObj=AlarmObj("","","","",true,"")
 
         viewModel.getNavigate().observe(this, Observer<AlarmObj> {
@@ -62,13 +64,19 @@ class AlertActivity : AppCompatActivity() {
 
         binding.fromTimeImg.setOnClickListener { v ->
 
-            val hour = calStart.get(Calendar.HOUR)
-            val minute = calStart.get(Calendar.MINUTE)
+            val hour = cal.get(Calendar.HOUR)
+            val minute = cal.get(Calendar.MINUTE)
 
             val tpd = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
-                calStart.set(Calendar.HOUR,h)
+                calStart.set(Calendar.HOUR_OF_DAY,h)
                 calStart.set(Calendar.MINUTE,m)
-                alarmObj.start= "$h : $m"
+                calStart.set(Calendar.SECOND,0)
+
+                val format = SimpleDateFormat("hh:mm aaa")
+                alarmObj.start = format.format(calStart.time)
+                //binding.fromTimeImg.setText(format.format(calStart.time))
+
+//                alarmObj.start= "$h : $m"
                 binding.fromTimeImg.text="$h : $m"
 
                 Toast.makeText(this, h.toString() + " : " + m +" : " , Toast.LENGTH_LONG).show()
@@ -80,13 +88,16 @@ class AlertActivity : AppCompatActivity() {
 
         binding.toTimeImg.setOnClickListener { v ->
 
-            val hour = calEnd.get(Calendar.HOUR)
-            val minute = calEnd.get(Calendar.MINUTE)
+            val hour = cal.get(Calendar.HOUR)
+            val minute = cal.get(Calendar.MINUTE)
 
             val tpd = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
-                calEnd.set(Calendar.HOUR,h)
+                calEnd.set(Calendar.HOUR_OF_DAY,h)
                 calEnd.set(Calendar.MINUTE,m)
-                alarmObj.end= "$h : $m"
+                calEnd.set(Calendar.SECOND,0)
+                val format = SimpleDateFormat("hh:mm aaa")
+                alarmObj.end = format.format(calEnd.time)
+//                alarmObj.end= "$h : $m"
                 binding.toTimeImg.text="$h : $m"
 
                 Toast.makeText(this, h.toString() + " : " + m  , Toast.LENGTH_LONG).show()
@@ -103,11 +114,15 @@ class AlertActivity : AppCompatActivity() {
                 calStart.set(Calendar.MONTH, monthOfYear)
                 calStart.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                calEnd.set(Calendar.YEAR, year)
-                calEnd.set(Calendar.MONTH, monthOfYear)
-                calEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                val myFormat = "dd.MM.yyyy" // mention the format you need
+                calEnd.set(Calendar.YEAR,year)
+                calEnd.set(Calendar.MONTH, monthOfYear)
+                calEnd.set(Calendar.DAY_OF_MONTH,dayOfMonth)
+
+                Log.i("alarm",""+calStart)
+                Log.i("alarm",""+calEnd.timeInMillis)
+
+                val myFormat = "dd/MM/yyyy" // mention the format you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 alarmObj.Date = sdf.format(calStart.time)
                 binding.calenderTv.text=sdf.format(calStart.time)
@@ -115,9 +130,9 @@ class AlertActivity : AppCompatActivity() {
             }
 
             var datePickerDialog=DatePickerDialog(this, dateSetListener,
-                    calStart.get(Calendar.YEAR),
-                    calStart.get(Calendar.MONTH),
-                    calStart.get(Calendar.DAY_OF_MONTH)).show()
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)).show()
             //datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
 
@@ -182,17 +197,31 @@ class AlertActivity : AppCompatActivity() {
         dialog.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         bindingDialog = NewAlarmBinding.inflate(layoutInflater)
         dialog.setContentView(bindingDialog.root)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialog.getWindow()?.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+
+        var cal=Calendar.getInstance()
+        bindingDialog.DescribtionTv.setText(alarmObj.description)
+        bindingDialog.fromTimeImg.text=alarmObj.start
+        bindingDialog.toTimeImg.text=alarmObj.end
+        bindingDialog.calenderTv.text=alarmObj.Date
 
 
         bindingDialog.fromTimeImg.setOnClickListener { v ->
 
-            val hour = calStart.get(Calendar.HOUR)
-            val minute = calStart.get(Calendar.MINUTE)
+            val hour = cal.get(Calendar.HOUR)
+            val minute = cal.get(Calendar.MINUTE)
 
             val tpd = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
-                calStart.set(Calendar.HOUR,h)
+                calStart.set(Calendar.HOUR_OF_DAY,h)
                 calStart.set(Calendar.MINUTE,m)
-                alarmObj.start= "$h : $m"
+
+                val format = SimpleDateFormat("hh:mm aaa")
+                alarmObj.start = format.format(calStart.time)
+                bindingDialog.fromTimeImg.setText(format.format(calStart.time))
+                //alarmObj.start= "$h : $m"
 
                 Toast.makeText(this, h.toString() + " : " + m +" : " , Toast.LENGTH_LONG).show()
 
@@ -203,13 +232,18 @@ class AlertActivity : AppCompatActivity() {
 
         bindingDialog.toTimeImg.setOnClickListener { v ->
 
-            val hour = calEnd.get(Calendar.HOUR)
-            val minute = calEnd.get(Calendar.MINUTE)
+            val hour = cal.get(Calendar.HOUR)
+            val minute = cal.get(Calendar.MINUTE)
 
             val tpd = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
-                calEnd.set(Calendar.HOUR,h)
+                calEnd.set(Calendar.HOUR_OF_DAY,h)
                 calEnd.set(Calendar.MINUTE,m)
-                alarmObj.end= "$h : $m"
+
+                val format = SimpleDateFormat("hh:mm aaa")
+                alarmObj.end = format.format(calEnd.time)
+                bindingDialog.toTimeImg.setText(format.format(calEnd.time))
+
+                //alarmObj.end= "$h : $m"
 
                 Toast.makeText(this, h.toString() + " : " + m  , Toast.LENGTH_LONG).show()
 
@@ -229,16 +263,16 @@ class AlertActivity : AppCompatActivity() {
                 calEnd.set(Calendar.MONTH, monthOfYear)
                 calEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                val myFormat = "dd.MM.yyyy" // mention the format you need
+                val myFormat = "dd/MM/yyyy" // mention the format you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 alarmObj.Date = sdf.format(calStart.time)
 
             }
 
             var datePickerDialog=DatePickerDialog(this, dateSetListener,
-                    calStart.get(Calendar.YEAR),
-                    calStart.get(Calendar.MONTH),
-                    calStart.get(Calendar.DAY_OF_MONTH)).show()
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)).show()
             //datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
 
@@ -270,6 +304,7 @@ class AlertActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         dialog.show()
+        dialog.getWindow()?.setAttributes(lp)
     }
 
     private fun setAlarm(context:Context,id:Int,calStart:Calendar,calEnd: Calendar,event:String,sound:Boolean) {

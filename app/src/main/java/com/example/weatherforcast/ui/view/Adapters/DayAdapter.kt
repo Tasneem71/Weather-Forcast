@@ -42,8 +42,8 @@ class DayAdapter(var DailyList: ArrayList<Daily>,context: Context) :
         val calendar: Calendar = Calendar.getInstance()
         calendar.setTimeInMillis(DailyList[position].dt.toLong()*1000)
         var date=calendar.get(Calendar.DAY_OF_MONTH).toString()+"/"+(calendar.get(Calendar.MONTH)+1).toString()
-        holder.myView.tempMin.text = DailyList[position].temp.min.toString()
-        holder.myView.tempMax.text = DailyList[position].temp.max.toString()
+        holder.myView.tempMin.text = (DailyList[position].temp.min.toInt()).toString()+"°"+"/"+(DailyList[position].temp.max.toInt()).toString()+"°"
+        holder.myView.tempMax.text ="uvi: "+ DailyList[position].uvi.toString()
         holder.myView.describ.text = DailyList[position].weather.get(0).description
         Log.i("day",calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()))
         holder.myView.dayname.text = localizingDays(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()),context)

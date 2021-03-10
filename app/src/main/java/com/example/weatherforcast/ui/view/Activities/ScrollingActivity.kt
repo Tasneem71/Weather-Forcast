@@ -2,13 +2,10 @@ package com.example.weatherforcast.ui.view.Activities
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -17,7 +14,6 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -30,7 +26,6 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.example.weatherforcast.R
-import com.example.weatherforcast.utils.WorkerApi
 import com.example.weatherforcast.data.entity.Alerts
 import com.example.weatherforcast.data.entity.ApiObj
 import com.example.weatherforcast.data.retro.SettingsEnum
@@ -39,28 +34,23 @@ import com.example.weatherforcast.ui.view.Adapters.DayAdapter
 import com.example.weatherforcast.ui.view.Adapters.HourAbapter
 import com.example.weatherforcast.ui.viewModel.ScrollingActivityVM
 import com.example.weatherforcast.utils.NotificationUtils
+import com.example.weatherforcast.utils.WorkerApi
 import com.google.android.gms.location.*
+import com.stephentuso.welcome.WelcomeHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class ScrollingActivity : AppCompatActivity() {
+class ScrollingActivity : localizeActivity(){
     lateinit var notificationUtils: NotificationUtils
     var yourLocationLat:Double=0.0
     var yourLocationLon:Double=0.0
     lateinit var binding:ActivityScrollingBinding
     private lateinit var scrollingActivityViewModal: ScrollingActivityVM
-    var dailyListAdapter =
-        DayAdapter(
-            arrayListOf(),
-            this
-        )
-    var hourlyListAdapter =
-        HourAbapter(arrayListOf())
+    var dailyListAdapter =DayAdapter(arrayListOf(),this)
+    var hourlyListAdapter =HourAbapter(arrayListOf())
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
     lateinit var prefs: SharedPreferences
@@ -72,6 +62,7 @@ class ScrollingActivity : AppCompatActivity() {
     var isUpdated:Boolean=false
     var lang:String=""
     var unit:String=""
+    lateinit var welcomeScreen: WelcomeHelper
 
     var handler = Handler(Handler.Callback {
         Toast.makeText(applicationContext,"location:"+yourLocationLat+","+yourLocationLon,Toast.LENGTH_SHORT).show()
@@ -90,26 +81,19 @@ class ScrollingActivity : AppCompatActivity() {
         binding = ActivityScrollingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        welcomeScreen = WelcomeHelper(this, WelcomeScreenActivity::class.java)
+        welcomeScreen.show(savedInstanceState)
+
         prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         editor= prefs.edit()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val intent = Intent()
-            val packageName = packageName
-            val pm: PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivity(intent)
-            }
-        }
 
-        val saveRequest = PeriodicWorkRequest.Builder(WorkerApi::class.java,15, TimeUnit.MINUTES).addTag("up").build()
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork("up", ExistingPeriodicWorkPolicy.REPLACE,saveRequest)
+        whiteList()
 
-            scrollingActivityViewModal = ViewModelProvider(this,
-                    ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(ScrollingActivityVM::class.java)
-            findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).title = " "
-            initUI()
+        workerInit()
+
+        scrollingActivityViewModal = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(ScrollingActivityVM::class.java)
+         findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).title = " "
+         initUI()
 
         loc=prefs.getBoolean("USE_DEVICE_LOCATION", true)
         unit=prefs.getString("UNIT_SYSTEM", SettingsEnum.IMPERIAL.Value).toString()
@@ -145,6 +129,30 @@ class ScrollingActivity : AppCompatActivity() {
 
     }
 
+    private fun workerInit() {
+        val saveRequest = PeriodicWorkRequest.Builder(WorkerApi::class.java,15, TimeUnit.MINUTES).addTag("up").build()
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork("up", ExistingPeriodicWorkPolicy.REPLACE,saveRequest)
+
+    }
+
+    private fun whiteList() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val intent = Intent()
+            val packageName = packageName
+            val pm: PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        welcomeScreen.onSaveInstanceState(outState);
+    }
+
     private fun initUI() {
         binding.iContent.hourList.apply {
             layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
@@ -170,34 +178,11 @@ class ScrollingActivity : AppCompatActivity() {
 
     }
 
-    private fun dateFormat(milliSeconds: Int):String{
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.setTimeInMillis(milliSeconds.toLong() * 1000)
-        var month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-        var day=calendar.get(Calendar.DAY_OF_MONTH).toString()
-        var year=calendar.get(Calendar.YEAR).toString()
-        return day+"/"+month// +"/"+year
-
-    }
-
-    private fun timeFormat(millisSeconds:Int ): String {
-        val calendar = Calendar.getInstance()
-        calendar.setTimeInMillis((millisSeconds * 1000).toLong())
-        val format = SimpleDateFormat("hh:00 aaa")
-        return format.format(calendar.time)
-    }
-
     private fun notifyUser(alert:List<Alerts>){
-//        Toast.makeText(this,"alerts",Toast.LENGTH_SHORT).show()
-//        val tapNotification = Intent(applicationContext, ScrollingActivity::class.java)
-//        tapNotification.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         notificationUtils = NotificationUtils(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            var pendingIntent:PendingIntent=PendingIntent.getActivity(this, 1,
-//                tapNotification, PendingIntent.FLAG_ONE_SHOT)
             val nb: NotificationCompat.Builder? = notificationUtils.getAndroidChannelNotification(alert.get(0)?.event, ""
-                    +dateFormat(alert.get(0)?.start.toInt())+","+dateFormat(alert.get(0)?.end.toInt()) +"\n"+alert.get(0)?.description,true)
+                    +scrollingActivityViewModal.dateFormat(alert.get(0)?.start.toInt())+","+scrollingActivityViewModal.dateFormat(alert.get(0)?.end.toInt()) +"\n"+alert.get(0)?.description,true)
             notificationUtils.getManager()?.notify(3, nb?.build())
     }
     }
@@ -222,8 +207,8 @@ class ScrollingActivity : AppCompatActivity() {
                     binding.iContent.wendTv.text=current.wind_speed.toString()
                     binding.iContent.pressureTv.text=current.pressure.toString()
                     binding.iContent.cloudTv.text=current.clouds.toString()
-                    binding.iContent.Date.text= dateFormat(current.dt)
-                    binding.iContent.Time.text= timeFormat(current.dt)
+                    binding.iContent.Date.text= scrollingActivityViewModal.dateFormat(current.dt)
+                    binding.iContent.Time.text= scrollingActivityViewModal.timeFormat(current.dt)
                     binding.iContent.feels.text= current.feels_like.toString()
                     dailyListAdapter.updateDays(daily)
                     hourlyListAdapter.updateHours(hourly)
@@ -257,11 +242,7 @@ class ScrollingActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-//                R.id.action_favorites -> {
-//                    val intent: Intent = Intent(applicationContext, FavoritesActivity::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
+
                 R.id.action_Alerts -> {
                     val intent: Intent = Intent(applicationContext,
                         AlertActivity::class.java)
@@ -385,7 +366,7 @@ class ScrollingActivity : AppCompatActivity() {
             Log.i("ola"," "+unit+"resume")
             lon=prefs.getString("lon", ("")).toString()
             lat=prefs.getString("lat", ("")).toString()
-            setLocale(this,lang)
+            //setLocale(this,lang)
             if(loc){
                 mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
                 getLastLocation()
@@ -408,14 +389,7 @@ class ScrollingActivity : AppCompatActivity() {
         editor.commit()
     }
 
-    fun setLocale(activity: Activity, languageCode: String?) {
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-        val resources: Resources = activity.resources
-        val config: Configuration = resources.getConfiguration()
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.getDisplayMetrics())
-    }
+
 
     private fun getObjByTimezone() {
         CoroutineScope(Dispatchers.IO).launch {

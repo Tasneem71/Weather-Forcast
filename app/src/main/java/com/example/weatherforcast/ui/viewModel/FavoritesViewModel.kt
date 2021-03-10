@@ -11,6 +11,8 @@ import com.example.weatherforcast.data.roomdb.LocalDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -61,4 +63,22 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     public fun onShowClick(weatherObj:ApiObj){
         displayListener.value=weatherObj
     }
+
+     fun timeFormat(millisSeconds: Int): String {
+        val calendar = Calendar.getInstance()
+        calendar.setTimeInMillis((millisSeconds * 1000).toLong())
+        val format = SimpleDateFormat("hh:00 aaa")
+        return format.format(calendar.time)
+    }
+     fun dateFormat(milliSeconds: Int):String{
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.setTimeInMillis(milliSeconds.toLong() * 1000)
+        var month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        var day=calendar.get(Calendar.DAY_OF_MONTH).toString()
+        var year=calendar.get(Calendar.YEAR).toString()
+        return day+month// +year
+
+    }
+
 }

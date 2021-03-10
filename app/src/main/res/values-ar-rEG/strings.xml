@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WeatherForcast</string>
+    <string name="action_settings">إعدادت</string>
+    <string name="action_Alerts">منبه</string>
+    <string name="country">بلد</string>
+    <string name="Details">التفاصيل</string>
+    <string name="wend">الرياح</string>
+    <string name="cloud">السحب</string>
+    <string name="Humidity">الرطوبة</string>
+    <string name="Pressure">الضغط</string>
+    <string name="action_favorites">المفضلة</string>
+    <string name="title_activity_maps">الخريطة</string>
+    <string name="Describtion">الوصف</string>
+    <string name="Date">اختر تاريخ</string>
+    <string name="From">من</string>
+    <string name="to">إلى</string>
+    <string name="Events">الأحداث</string>
+    <string name="save_add_btn">احفظ المنبه</string>
+    <string name="notification">إشعار</string>
+    <string name="alarmSound">منبه</string>
+    <string name="soundType">نوع التنبيه</string>
+    <string name="units_title">الوحدات</string>
+    <string name="attchement_unit">نظام الوحدات</string>
+    <string name="loc_title">موقع الطقس</string>
+    <string name="language_title">اللغة</string>
+    <string name="attchement2_language">لغة التطبيق</string>
+    <string name="attachment2_summary">اختر موقع من الخريطة</string>
+    <string name="attchement_title">الموقع</string>
+    <string name="attachment_titlel">استخدم موقعك الحالي</string>
+    <string name="attachment_summary">السماح للتطبيق بمعرفة موقعك الحالي</string>
+    <string name="manageCities">التحكم في المدن</string>
+    <string name="Alarms">المنبهات</string>
+    <string name="addAlarm">+  أضف</string>
+    <string name="save">+  إحفظ</string>
+    <string name="date">التاريخ</string>
+    <string name="time">الوقت</string>
+    <string name="feels_like">الشعور الحالي</string>
+    <string name="sevenDayes">النشرة الجوية للأسبوع</string>
+    <string name="manageTitle">التحكم في المدن</string>
+    <string name="manageDescribe">اختر المدن التي تريد متابعتها وتفقد جميع المعلومات عنها</string>
+    <string name="NeverTitle">لا تتفاجأ ابدا</string>
+    <string name="neverDescribe">WD يعطيك النشرة الجوية لسبعة ايام وكذلك لجميع ساعات اليوم الحالي كما يقوم بتنبيهك في حالة وجود تحذير عن الطقس</string>
+    <string name="allwaysTitle">كن مستعدا دائما</string>
+    <string name="alwaysDescribe">اضبط منبهات بالتنسيق مع الطقس ليتم تنبيهك لوضع الطقس</string>
+
+
+    <string-array name="event_options">
+        <item>مطر</item>
+        <item>ثلوج</item>
+        <item>ضباب</item>
+        <item>عاصفة</item>
+        <item>غيوم</item>
+        <item>رياح</item>
+
+    </string-array>
+
+</resources>
