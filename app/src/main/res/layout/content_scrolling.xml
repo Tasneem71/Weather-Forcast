@@ -23,11 +23,11 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/date_img"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
+                android:layout_height="25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/sun"
+                android:src="@drawable/calendar"
                 android:layout_gravity="center"
                 android:layout_weight=".4"/>
             <TextView
@@ -68,11 +68,11 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/time_img"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
+                android:layout_height="25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/date_img"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/sun"
+                android:src="@drawable/hourglass"
                 android:layout_gravity="center"
                 android:layout_weight=".4"/>
             <TextView

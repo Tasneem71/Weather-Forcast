@@ -3,8 +3,10 @@ package com.example.weatherforcast.ui.view.Activities
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
@@ -12,18 +14,20 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weatherforcast.utils.AlarmReceiver
+import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherforcast.R
 import com.example.weatherforcast.data.entity.AlarmObj
 import com.example.weatherforcast.databinding.ActivityAlertBinding
 import com.example.weatherforcast.databinding.NewAlarmBinding
 import com.example.weatherforcast.ui.view.Adapters.AlertAdabter
 import com.example.weatherforcast.ui.viewModel.AlartViewModel
+import com.example.weatherforcast.utils.AlarmReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +45,6 @@ class AlertActivity : localizeActivity() {
     var calStart = Calendar.getInstance()
     var calEnd = Calendar.getInstance()
     lateinit var alarmObj:AlarmObj
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alert)
@@ -59,6 +62,7 @@ class AlertActivity : localizeActivity() {
         })
 
         getAlarmData(viewModel)
+
 
         initUI()
 
@@ -181,6 +185,8 @@ class AlertActivity : localizeActivity() {
 //            showDialog(alarmObj)
 
         }
+
+
 
 
     }
@@ -358,7 +364,26 @@ class AlertActivity : localizeActivity() {
             adapter = alertAdabter
 
         }
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder2: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
+                alertAdabter.removeFromAdapter(viewHolder)
+            }
+
+        }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.alarmList)
+
+
+
     }
+
+
+
+
 
 
 }

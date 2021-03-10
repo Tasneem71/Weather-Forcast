@@ -1,16 +1,24 @@
 package com.example.weatherforcast.ui.viewModel
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
+import android.util.Log
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.weatherforcast.R
 import com.example.weatherforcast.data.ApiRepository
 import com.example.weatherforcast.data.entity.ApiObj
-import com.example.weatherforcast.data.retro.WeatherServes
-import com.example.weatherforcast.data.roomdb.LocalDataSource
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class ScrollingActivityVM (application: Application) : AndroidViewModel(application) {
 
@@ -54,23 +62,33 @@ class ScrollingActivityVM (application: Application) : AndroidViewModel(applicat
         return format.format(calendar.time)
     }
 
+    fun backgroundBasedOnTime(root: View, activity: Activity){
+        val drawbleDark =  activity!!.resources.getDrawable(R.drawable.background_night_bg,activity!!.theme)
+        val drawbleLight =  activity!!.resources.getDrawable(R.drawable.background_bg,activity!!.theme)
+        val sdk = android.os.Build.VERSION.SDK_INT;
+        val cal = Calendar.getInstance() //Create Calendar-Object
+
+        cal.time = Date() //Set the Calendar to now
+
+        val hour = cal[Calendar.HOUR_OF_DAY] //Get the hour from the calendar
+        Log.i("back","hour"+hour)
+        if (hour <= 17 && hour >= 5) // Check if hour is between 8 am and 11pm
+        {
+            Log.i("back","hour2"+hour)
+                Log.i("back","light")
+                root.background=drawbleLight
+
+
+        }else{
+
+                Log.i("back","Dark")
+                root.background=drawbleDark
+            val window: Window = activity.getWindow()
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.setStatusBarColor(getColor(activity,R.color.darkstatus))
+
+        }
+
+    }
+
 }
-
-
-
-//public fun loadWeather() {
-//    wetherServes.getWeatherService(ScrollingActivityVM.lat, ScrollingActivityVM.lon).enqueue(object : Callback<ApiObj> {
-//        override fun onResponse(call: Call<ApiObj>, response: Response<ApiObj>) {
-//            if (response.code() == 200) {
-//                val weatherResponse = response.body()!!
-//                task.postValue(weatherResponse)
-//                Log.i("load","egergerg"+weatherResponse.toString())
-//
-//            }
-//        }
-//
-//        override fun onFailure(call: Call<ApiObj>, t: Throwable) {
-//            Log.i("error","egergerg")
-//        }
-//    })
-//}

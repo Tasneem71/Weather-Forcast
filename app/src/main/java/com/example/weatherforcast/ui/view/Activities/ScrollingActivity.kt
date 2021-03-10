@@ -203,6 +203,7 @@ class ScrollingActivity : localizeActivity(){
                     }
 
 
+
                     binding.iContent.humidityTv.text=current.humidity.toString()
                     binding.iContent.wendTv.text=current.wind_speed.toString()
                     binding.iContent.pressureTv.text=current.pressure.toString()
@@ -355,6 +356,7 @@ class ScrollingActivity : localizeActivity(){
 
     override fun onResume() {
         super.onResume()
+        //scrollingActivityViewModal.backgroundBasedOnTime(binding.rootlay,this)
         isUpdated=prefs.getBoolean("isUpdated", false)
         Log.i("ola"," "+isUpdated.toString()+"resume")
         if(isUpdated)
@@ -374,9 +376,9 @@ class ScrollingActivity : localizeActivity(){
             else{
                 scrollingActivityViewModal.loadWeatherObj(applicationContext,lat.toDouble(),lon.toDouble(),lang,unit)
             }
-            Log.i("ola", "before res:" + lang + "," + unit + " " + loc + " " + lat + " " + lon)
+            Log.i("onR", "before res:" + lang + "," + unit + " " + loc + " " + lat + " " + lon)
             scrollingActivityViewModal.updateAllData(applicationContext,lang,unit)
-            Log.i("ola", "after  res:" + lang + "," + unit + " " + loc + " " + lat + " " + lon)
+            Log.i("onR", "after  res:" + lang + "," + unit + " " + loc + " " + lat + " " + lon)
             editor.putBoolean("isUpdated", false)
             editor.commit()
 
@@ -397,4 +399,6 @@ class ScrollingActivity : localizeActivity(){
             updateCurrent(weather)
         }
     }
+
+
 }

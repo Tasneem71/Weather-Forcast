@@ -97,6 +97,9 @@ dependencies {
     //welcome screens
     implementation 'com.stephentuso:welcome:1.4.1'
 
+    //adapterDecorate
+    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
+
 
 
 }

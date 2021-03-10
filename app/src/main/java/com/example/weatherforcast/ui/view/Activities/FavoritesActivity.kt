@@ -3,17 +3,22 @@ package com.example.weatherforcast.ui.view.Activities
 import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherforcast.ui.viewModel.FavoritesViewModel
 import com.example.weatherforcast.R
@@ -47,6 +52,8 @@ class FavoritesActivity : localizeActivity() {
         HourAbapter(arrayListOf())
     lateinit var dialog: Dialog
     lateinit var prefs: SharedPreferences
+    private lateinit var colorDrawableBackground: ColorDrawable
+    private lateinit var deleteIcon: Drawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +88,9 @@ class FavoritesActivity : localizeActivity() {
             finish()
         }
 
+        colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))
+        deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_delete_forever_24)!!
+
         initUI()
         viewModel.getNavigate().observe(this, Observer<String> { timeZone ->
             viewModel.deleteApiObj(timeZone)
@@ -99,6 +109,50 @@ class FavoritesActivity : localizeActivity() {
             adapter = favoriteAdapter
 
         }
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder2: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
+                favoriteAdapter.removeFromAdapter(viewHolder)
+            }
+            override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float,
+                                     dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+                val itemView = viewHolder.itemView
+                val iconMarginVertical = (viewHolder.itemView.height - deleteIcon.intrinsicHeight) / 2
+
+                if (dX > 0) {
+                    colorDrawableBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                    deleteIcon.setBounds(itemView.left + iconMarginVertical, itemView.top + iconMarginVertical,
+                        itemView.left + iconMarginVertical + deleteIcon.intrinsicWidth, itemView.bottom - iconMarginVertical)
+                } else {
+                    colorDrawableBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(itemView.right - iconMarginVertical - deleteIcon.intrinsicWidth, itemView.top + iconMarginVertical,
+                        itemView.right - iconMarginVertical, itemView.bottom - iconMarginVertical)
+                    deleteIcon.level = 0
+                }
+
+                colorDrawableBackground.draw(c)
+
+                c.save()
+
+                if (dX > 0)
+                    c.clipRect(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                else
+                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+
+                deleteIcon.draw(c)
+
+                c.restore()
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+
+        }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.rvFavList)
+
     }
 
     private fun observeViewModel(viewModel: FavoritesViewModel, lat: Double, lon: Double,lang:String,unit:String) {
@@ -142,6 +196,7 @@ class FavoritesActivity : localizeActivity() {
                 bindingDialog.dialogContent.iContent.cloudTv.text=current.clouds.toString()
                 bindingDialog.dialogContent.iContent.Date.text= viewModel.dateFormat(current.dt)
                 bindingDialog.dialogContent.iContent.Time.text= viewModel.timeFormat(current.dt)
+
                 CoroutineScope(Dispatchers.Main).launch{
                     Glide.with(bindingDialog.dialogContent.currentIcon).
                     load(iconLinkgetter(current.weather.get(0).icon)).

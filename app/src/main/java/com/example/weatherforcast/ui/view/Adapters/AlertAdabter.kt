@@ -4,6 +4,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,11 +13,15 @@ import com.example.weatherforcast.utils.AlarmReceiver
 import com.example.weatherforcast.data.entity.AlarmObj
 import com.example.weatherforcast.databinding.AlarmItemBinding
 import com.example.weatherforcast.ui.viewModel.AlartViewModel
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import java.util.ArrayList
 
 class AlertAdabter (var alarmList: ArrayList<AlarmObj>,alartViewModel: AlartViewModel, context: Context) : RecyclerView.Adapter<AlertAdabter.VH>() {
     lateinit var context: Context
     lateinit var alartViewModel: AlartViewModel
+    lateinit var removedAlarmObj:AlarmObj
+    private var removedposition=0
     init {
         this.context=context
         this.alartViewModel=alartViewModel
@@ -59,5 +65,50 @@ class AlertAdabter (var alarmList: ArrayList<AlarmObj>,alartViewModel: AlartView
     }
 
     override fun getItemCount() = alarmList.size
+
+    fun removeForever(id: Int){
+        alartViewModel.deleteAlarmObj(id)
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(context,id, intent, 0)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pendingIntent)
+    }
+    fun removeFromAdapter(viewHolder:RecyclerView.ViewHolder){
+        removedposition=viewHolder.adapterPosition
+        removedAlarmObj=alarmList[viewHolder.adapterPosition]
+
+        alarmList.removeAt(viewHolder.adapterPosition)
+        notifyItemRemoved(viewHolder.adapterPosition)
+
+        Snackbar.make(viewHolder.itemView, "${removedAlarmObj.event} removed", Snackbar.LENGTH_LONG).apply {
+            setAction("UNDO") {
+                alarmList.add(removedposition, removedAlarmObj)
+                notifyItemInserted(removedposition)
+            }
+            addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                override fun onShown(transientBottomBar: Snackbar?) {
+                    super.onShown(transientBottomBar)
+                    Log.i("snack", "onShown")
+                }
+
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    // Snackbar closed on its own
+                    Log.i("snack", "on click")
+                    if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                        // Snackbar closed on its own
+                        removeForever(removedAlarmObj.id)
+                    }
+
+                }
+            })
+            setTextColor(Color.parseColor("#FFFFFFFF"))
+            setActionTextColor(Color.parseColor("#09A8A8"))
+            setBackgroundTint(Color.parseColor("#616161"))
+            duration.minus(1)
+        }.show()
+
+    }
+
 
 }

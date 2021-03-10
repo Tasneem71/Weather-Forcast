@@ -5,7 +5,7 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-const val API_KEY = "657a3a141a21f4b9151316c7a77c0d5e"
+const val API_KEY = "fe73bba9347d5f20956405171ad80715"
 interface WeatherApi {
     @GET("data/2.5/onecall")
     suspend fun getCurrentWeatherByLatLng(

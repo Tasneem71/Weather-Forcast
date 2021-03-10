@@ -1,17 +1,24 @@
 package com.example.weatherforcast.ui.view.Adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherforcast.data.entity.AlarmObj
 import com.example.weatherforcast.ui.viewModel.FavoritesViewModel
 import com.example.weatherforcast.data.entity.ApiObj
 import com.example.weatherforcast.databinding.FavItemBinding
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 class FavoriteAdapter(var FavList: ArrayList<ApiObj>, favoritesViewModel: FavoritesViewModel, context:Context) : RecyclerView.Adapter<FavoriteAdapter.VH>() {
      var favoritesViewModel: FavoritesViewModel
      var context: Context
+    lateinit var removedApiObj: ApiObj
+    private var removedposition=0
     init {
         this.favoritesViewModel=favoritesViewModel
         this.context=context
@@ -45,6 +52,43 @@ class FavoriteAdapter(var FavList: ArrayList<ApiObj>, favoritesViewModel: Favori
         holder.myView.favItem.setOnClickListener {
             favoritesViewModel.onShowClick(FavList[position])
         }
+
+    }
+
+    fun removeFromAdapter(viewHolder:RecyclerView.ViewHolder){
+        removedposition=viewHolder.adapterPosition
+        removedApiObj=FavList[viewHolder.adapterPosition]
+
+        FavList.removeAt(viewHolder.adapterPosition)
+        notifyItemRemoved(viewHolder.adapterPosition)
+
+        Snackbar.make(viewHolder.itemView, "${removedApiObj.timezone} removed", Snackbar.LENGTH_LONG).apply {
+            setAction("UNDO") {
+                FavList.add(removedposition, removedApiObj)
+                notifyItemInserted(removedposition)
+            }
+            addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                override fun onShown(transientBottomBar: Snackbar?) {
+                    super.onShown(transientBottomBar)
+                    Log.i("snack", "onShown")
+                }
+
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    // Snackbar closed on its own
+                    Log.i("snack", "on click")
+                    if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                        // Snackbar closed on its own
+                        favoritesViewModel.onRemoveClick(removedApiObj.timezone)
+                    }
+
+                }
+            })
+            setTextColor(Color.parseColor("#FFFFFFFF"))
+            setActionTextColor(Color.parseColor("#09A8A8"))
+            setBackgroundTint(Color.parseColor("#616161"))
+            duration.minus(1)
+        }.show()
 
     }
 

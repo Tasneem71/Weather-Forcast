@@ -7,12 +7,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".ui.view.Activities.ScrollingActivity"
-    android:background="@drawable/background_bg">
+    android:background="@drawable/background_bg"
+    android:id="@+id/rootlay">
      <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/colorSecond"
             android:paddingHorizontal="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

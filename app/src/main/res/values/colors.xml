@@ -22,5 +22,6 @@
     <color name="semiTransparentColorBorder">#66FFFFFF</color>
 
     <color name="conOrange">#EC6E4C</color>
+    <color name="darkstatus">#1F3E4C</color>
 
 </resources>
