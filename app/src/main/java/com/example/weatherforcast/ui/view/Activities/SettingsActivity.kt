@@ -76,6 +76,7 @@ class SettingsActivity : localizeActivity() {
 
                 }
                 else if (preference is ListPreference) {
+                    Log.i("tasneemsetting",""+preference.key)
                     if(preference.key=="UNIT_SYSTEM") {
                         val value = sharedPreferences?.getString(preference.key, "")
                         Log.i("setting",value+"uu")

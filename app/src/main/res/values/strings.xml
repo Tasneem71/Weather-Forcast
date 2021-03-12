@@ -26,7 +26,7 @@
 
     <!-- Units Preferences -->
     <string name="units_title">Units</string>
-    <string name="attchement_unit">UNIT_SYSTEM</string>
+    <string name="attchement_unit" translatable="false">UNIT_SYSTEM</string>
     <string name="unit_key" translatable="false">Unit system</string>
     <string name="unit_metric_summary" translatable="false"> Temb in Celsius and wind speed in meter/sec</string>
     <string name="unit_imperial_summary" translatable="false"> Temb in Fahrenheit and wind speed in miles/hour</string>

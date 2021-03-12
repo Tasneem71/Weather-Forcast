@@ -21,7 +21,6 @@
     <string name="alarmSound">منبه</string>
     <string name="soundType">نوع التنبيه</string>
     <string name="units_title">الوحدات</string>
-    <string name="attchement_unit">نظام الوحدات</string>
     <string name="loc_title">موقع الطقس</string>
     <string name="language_title">اللغة</string>
     <string name="attchement2_language">لغة التطبيق</string>
