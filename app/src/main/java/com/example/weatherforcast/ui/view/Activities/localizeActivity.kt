@@ -88,7 +88,7 @@ open class localizeActivity :  AppCompatActivity() {
             window.setStatusBarColor(ContextCompat.getColor(activity, R.color.colorSecond))
 
 
-        }else if(hour <= 5 && hour > 18){
+        }else if(hour < 5 || hour >= 18){
 
             Log.i("back","Dark")
             root.background=drawbleDark

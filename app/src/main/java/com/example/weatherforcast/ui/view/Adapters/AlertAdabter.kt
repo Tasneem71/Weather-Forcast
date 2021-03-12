@@ -46,7 +46,7 @@ class AlertAdabter (var alarmList: ArrayList<AlarmObj>,alartViewModel: AlartView
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.myView.alarmType.text =alarmList[position].event
-        holder.myView.dateTime.text = ""+alarmList[position].start+" to "+alarmList[position].end
+        holder.myView.dateTime.text = ""+alarmList[position].start+" to "+alarmList[position].end+" "+alarmList[position].Date
         holder.myView.details.text =alarmList[position].description
 
         holder.myView.editBtn.setOnClickListener {

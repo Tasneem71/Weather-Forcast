@@ -357,9 +357,9 @@ class ScrollingActivity : localizeActivity(){
     override fun onResume() {
         super.onResume()
 
-//        if (prefs.getBoolean("THEME_MODE", false)){
-//            backgroundBasedOnTime(binding.rootlay,this)
-//        }
+        if (prefs.getBoolean("THEME_MODE", false)){
+           backgroundBasedOnTime(binding.rootlay,this)
+        }
 
         isUpdated=prefs.getBoolean("isUpdated", false)
         Log.i("ola"," "+isUpdated.toString()+"resume")
