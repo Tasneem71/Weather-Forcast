@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.view.Activities.AlertActivity"
-    android:background="@drawable/background_bg">
+    android:background="@drawable/background_bg"
+    android:id="@+id/rootlay">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"

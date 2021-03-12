@@ -3,6 +3,7 @@ package com.example.weatherforcast.ui.view.Activities
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -18,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,6 +47,7 @@ class AlertActivity : localizeActivity() {
     var calStart = Calendar.getInstance()
     var calEnd = Calendar.getInstance()
     lateinit var alarmObj:AlarmObj
+    lateinit var prefs: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alert)
@@ -53,6 +56,7 @@ class AlertActivity : localizeActivity() {
         alertAdabter= AlertAdabter(arrayListOf(),viewModel,applicationContext)
         binding = ActivityAlertBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         var cal=Calendar.getInstance()
         alarmObj=AlarmObj("","","","",true,"")
 
@@ -379,6 +383,13 @@ class AlertActivity : localizeActivity() {
 
 
 
+    }
+
+    override fun onResume() {
+        if (prefs.getBoolean("THEME_MODE", false)){
+            backgroundBasedOnTime(binding.rootlay,this)
+        }
+        super.onResume()
     }
 
 

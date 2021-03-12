@@ -64,6 +64,9 @@
     <string name="neverDescribe">WD provides you with 7-days forecast and an hourly forecast for the current day it also notifies you in case of emergencies.</string>
     <string name="allwaysTitle">Always be prepared</string>
     <string name="alwaysDescribe">set alarms that are associated with weather events to get notified about weather conditions.</string>
+    <string name="themeMode">Weather Mode</string>
+    <string name="athemeMode_summary">change theme to conform to the weather</string>
+    <string name="Theme_title">Theme Mode</string>
 
 
     <string-array name="event_options">

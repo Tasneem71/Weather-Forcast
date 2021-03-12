@@ -46,5 +46,19 @@
             android:summary="%s"
             android:title="@string/attchement2_language" />
     </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/Theme_title"
+        android:icon="@drawable/pin">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="THEME_MODE"
+            android:summary="@string/athemeMode_summary"
+            android:title="@string/themeMode" />
+
+    </PreferenceCategory>
+
+
 </PreferenceScreen>
     <!-- android:summary="@string/unit_metric_summary"-->

@@ -62,33 +62,5 @@ class ScrollingActivityVM (application: Application) : AndroidViewModel(applicat
         return format.format(calendar.time)
     }
 
-    fun backgroundBasedOnTime(root: View, activity: Activity){
-        val drawbleDark =  activity!!.resources.getDrawable(R.drawable.background_night_bg,activity!!.theme)
-        val drawbleLight =  activity!!.resources.getDrawable(R.drawable.background_bg,activity!!.theme)
-        val sdk = android.os.Build.VERSION.SDK_INT;
-        val cal = Calendar.getInstance() //Create Calendar-Object
-
-        cal.time = Date() //Set the Calendar to now
-
-        val hour = cal[Calendar.HOUR_OF_DAY] //Get the hour from the calendar
-        Log.i("back","hour"+hour)
-        if (hour <= 17 && hour >= 5) // Check if hour is between 8 am and 11pm
-        {
-            Log.i("back","hour2"+hour)
-                Log.i("back","light")
-                root.background=drawbleLight
-
-
-        }else{
-
-                Log.i("back","Dark")
-                root.background=drawbleDark
-            val window: Window = activity.getWindow()
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.setStatusBarColor(getColor(activity,R.color.darkstatus))
-
-        }
-
-    }
 
 }

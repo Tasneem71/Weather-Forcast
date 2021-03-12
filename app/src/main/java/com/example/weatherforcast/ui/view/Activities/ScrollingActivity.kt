@@ -356,7 +356,11 @@ class ScrollingActivity : localizeActivity(){
 
     override fun onResume() {
         super.onResume()
-        //scrollingActivityViewModal.backgroundBasedOnTime(binding.rootlay,this)
+
+//        if (prefs.getBoolean("THEME_MODE", false)){
+//            backgroundBasedOnTime(binding.rootlay,this)
+//        }
+
         isUpdated=prefs.getBoolean("isUpdated", false)
         Log.i("ola"," "+isUpdated.toString()+"resume")
         if(isUpdated)
@@ -365,7 +369,7 @@ class ScrollingActivity : localizeActivity(){
             loc=prefs.getBoolean("USE_DEVICE_LOCATION", true)
             unit=prefs.getString("UNIT_SYSTEM", SettingsEnum.IMPERIAL.Value).toString()
             lang=prefs.getString("APP_LANG", SettingsEnum.ENGLISH.Value).toString()
-            Log.i("ola"," "+unit+"resume")
+            Log.i("onResume"," "+unit+"resume")
             lon=prefs.getString("lon", ("")).toString()
             lat=prefs.getString("lat", ("")).toString()
             //setLocale(this,lang)
@@ -383,6 +387,7 @@ class ScrollingActivity : localizeActivity(){
             editor.commit()
 
         }
+
 
     }
     override fun onPause() {

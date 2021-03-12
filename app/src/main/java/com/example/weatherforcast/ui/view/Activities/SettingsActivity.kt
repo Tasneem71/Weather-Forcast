@@ -67,7 +67,7 @@ class SettingsActivity : localizeActivity() {
             val preference: Preference? = key?.let { findPreference(it) }
             preference?.let {
                 // Updates the summary for the preference
-                Log.i("ola",""+preference+"pree")
+                Log.i("setting",""+preference+"pree")
                 if (preference is SwitchPreference) {
                     val value = sharedPreferences!!.getBoolean(preference.key,false)
                     Log.i("setting",""+value.toString()+"cc" +"")

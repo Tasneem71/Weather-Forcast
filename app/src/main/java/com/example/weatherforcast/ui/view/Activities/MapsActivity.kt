@@ -94,4 +94,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
 
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if(!(intent.hasExtra("mapId"))) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val editor: SharedPreferences.Editor = prefs.edit()
+            editor.putBoolean("USE_DEVICE_LOCATION", true)
+            editor.apply()
+            editor.commit()
+        }
+    }
 }
